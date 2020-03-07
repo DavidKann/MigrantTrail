@@ -311,6 +311,7 @@ function urldecode(str) {
 }
 
 const save = () => {
+    if (globalStoryState == "Intro") return
 
     let payload = JSON.stringify({
         name: globalPlayerName,
@@ -334,6 +335,8 @@ const save = () => {
 }
 
 const load = () => {
+    if (!document.cookie) return
+
     let gameInfo = JSON.parse(urldecode(document.cookie.replace("save=", "")))
 
     closeUI()
