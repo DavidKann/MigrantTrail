@@ -4,7 +4,6 @@ var globalButton1;
 var globalButton2;
 var globalButton3;
 var globalButton4;
-var globalRestartButton;
 var globalTextEntry;
 
 //global game variables
@@ -19,31 +18,15 @@ function sleep(ms) {
 }
 
 function gameLose(scenario) {
-<<<<<<< HEAD
-    
-    closeUI();
-    console.log(globalRestartButton);
-    document.getElementById("timer").style.display = "none";
-    globalRestartButton.style.display = "initial";
 
     switch (scenario) {
         case 1:
-=======
-
-    closeUI();
-    document.getElementById("timer").style.display = "none";
-
-
-    switch (scenario) {
-        case 1: // Run out of time
-            closeUI();
->>>>>>> 28d679895376a1762c893c3384dd84307db92aae
             drawImage("Raqqa");
             drawText("You're indesiciveness caused you and you're family to starve")
         case 2: // Smugeler running away with your money
             closeUI();
             drawImage("Raqqa")
-            drawText(text)
+            drawText("gdabwhjdgwa")
         case 3: // Get lost in the jungle
             closeUI()
             drawText("You decide to escape by land through a jungle, you took a wrong turn, got lost and starved")
@@ -65,11 +48,12 @@ function startTimer(time) {
         } else {
             document.getElementById("timer").innerHTML = timeleft;
         }
-        timeleft -= 1;}, 1000);
+        timeleft -= 1;
+    }, 1000);
 }
 
 //bind the user interface elements to global variables and start a new game
-function initializeGame(canvas, button1, button2, button3, button4, textEntry, restartButton) {
+function initializeGame(canvas, button1, button2, button3, button4, textEntry) {
 
 
     globalCanvas = canvas;
@@ -77,10 +61,8 @@ function initializeGame(canvas, button1, button2, button3, button4, textEntry, r
     globalButton2 = button2;
     globalButton3 = button3;
     globalButton4 = button4;
-    globalRestartButton = restartButton;
     globalTextEntry = textEntry;
 
-    console.log(globalRestartButton);
 
     newGame();
 
@@ -224,7 +206,6 @@ function closeUI() {
     globalButton3.style.display = "none";
     globalButton4.style.display = "none";
     globalTextEntry.style.display = "none";
-    globalRestartButton.style.display = "none";
 }
 
 
@@ -313,15 +294,20 @@ function advanceStory(buttonNumber) {
             if (Math.floor(Math.random() * 2)) {
                 closeUI();
                 gameLose(3)
+
+            } else {
+                globalStoryState = "ending";
+                advanceStory()
             }
         }
 
         // FIXME - Not moving to ending state
-        globalStoryState = "ending";
-        advanceStory()
+
     }
 
     else if (globalStoryState == "ending") {
+
+        closeUI()
 
         if (globalPlayerProfession == "MedStudent" && Math.floor(Math.random() * 2)) {
             drawText("You made it to Turkery where you got a job as a doctor");

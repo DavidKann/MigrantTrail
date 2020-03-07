@@ -8,7 +8,7 @@
 <body onLoad="start()">
     <script>function start() {
             console.log("*click*")
-            initializeGame(gameCanvas, button1, button2, button3, button4, textEntry, resetButton);
+            initializeGame(gameCanvas, button1, button2, button3, button4, textEntry);
             load()
         }
     </script>
@@ -19,8 +19,10 @@
         <h1>
             <p>Migrant Trail</p>
         </h1>
+        <div class="buttons">
+            <button onclick="save()">Save!</button>
+        </div>
 
-        <button onclick="save()">Save!</button>
 
         <p id=timer></p>
 
@@ -33,7 +35,6 @@
         <p><input id="button2" class="myButton" type="button" value="choice 2" onclick="captureButton(2);" /></p>
         <p><input id="button3" class="myButton" type="button" value="choice 3" onclick="captureButton(3);" /></p>
         <p><input id="button4" class="myButton" type="button" value="choice 4" onclick="captureButton(4);" /></p>
-        <p><input id="resetButton" class="myButton" type="button" value="Restart" onclick="newGame();" /></p>
 
     </div>
 </body>

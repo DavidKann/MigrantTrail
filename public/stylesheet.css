@@ -28,6 +28,18 @@ body {
 	border-radius: 15px;
 }
 
+.buttons {
+	display: flex;
+	flex-direction: row;
+}
+
+button {
+	width: 40vw;
+	height: 10vh;
+	font-size: 2rem;
+	margin: 5px;
+}
+
 .myButton {
 	position: relative;
 	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
