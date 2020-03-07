@@ -19,13 +19,25 @@ function sleep(ms) {
 }
 
 function gameLose(scenario) {
+
+    closeUI();
+    document.getElementById("timer").style.display = "none";
+
+
     switch (scenario) {
-        case 1:
+        case 1: // Run out of time
             closeUI();
             drawImage("Raqqa");
             drawText("You're indesiciveness caused you and you're family to starve")
-        case 2:
-        //2nd loss state
+        case 2: // Smugeler running away with your money
+            closeUI();
+            drawImage("Raqqa")
+            drawText(text)
+        case 3: // Get lost in the jungle
+            closeUI()
+            drawText("You decide to escape by land through a jungle, you took a wrong turn, got lost and starved")
+            drawImage("Jungle")
+
     }
 }
 
@@ -244,41 +256,51 @@ function advanceStory(buttonNumber) {
     else if (globalStoryState == "ChooseProfession") {
 
         if (buttonNumber == 1) {
-            drawText("You've heard stories of how dangerous the migrant trail can be. You gather your small medical kit ominously expecting it to be useful.");
             globalPlayerProfession = "MedStudent";
         }
         else if (buttonNumber == 2) {
-            drawText("When times were tough you would call on your extensive contacts network for work wherever it could be found. You couldn't imagine leaving without it and tuck it into your pocket.");
             globalPlayerProfession = "OddJobs";
         }
         else if (buttonNumber == 3) {
-            drawText("You had always enjoyed chatting with guests at the hotel; especially the foreigners. Over time you developed up a functional vocabulary in several languages. You don't know where your journey will take you but you expect to need to ask for some help along the way.");
             globalPlayerProfession = "HotelClerk";
         }
         else if (buttonNumber == 4) {
-            drawText("Even if you owned a car, you couldn't drive it out of the city unnoticed. You take a small toolkit with you anyway. Fortune favors the well prepared, you figure.");
             globalPlayerProfession = "Mechanic";
+
         }
+
         globalStoryState = "escape";
+        advanceStory();
+
     }
     else if (globalStoryState == "escape") {
-        setButton(1, "You decide to escape by sea")
+        drawText("You need to find a way out!")
+        setButton(1, "You decide to pay a smuggler to help you escape by sea")
         setButton(2, "You decide to escape by land ")
 
-        if (buttonNumber ==1)
+        if (buttonNumber == 1) {
+            if (/*Math.floor(Math.random() * 2)*/ true) {
+                drawText("You decided to pay a smuggler and they ran away with your money")
+            } else {
+                globalStoryState = "ending";
+                advanceStory()
+            }
+        }
 
-        if (Math.floor(Math.random() * 2)) {
-            drawText("You decided to pay a smuggler and they ran away with your money")
-        }  else {
-            drawText("You decided to pay a smuggler and they brought you and some other families to a boat by a truck")
-        }          
-        
-        //TODO
-        //Story Ideas
-        
+        if (buttonNumber == 2) {
+            if (/*Math.floor(Math.random() * 2))*/ true) {
+                gameLose(3)
+            } else {
+                globalStoryState = "ending";
+                advanceStory()
+            }
+        }
+    }
+
+    else if (globalStoryState == "ending") {
 
     }
-    
+
     else {
         //entered an invalid story state
         console.log("Story State Not Found: " + globalStoryState);
