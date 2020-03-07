@@ -319,8 +319,6 @@ const save = () => {
         storyState: globalStoryState
     })
 
-    console.log(JSON.stringify(payload))
-
     axios.post('/api/save', {
         save: payload
     })
