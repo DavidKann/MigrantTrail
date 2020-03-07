@@ -7,6 +7,7 @@
 }
 
 body {
+	font-size: 2rem;
 	font-family: 'Montserrat', sans-serif;
 	position: relative;
 	background: url("/img/fence.jpg") no-repeat center;
@@ -26,6 +27,8 @@ body {
 	background-color: white;
 	padding: 25px;
 	border-radius: 15px;
+
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .buttons {
@@ -34,10 +37,14 @@ body {
 }
 
 button {
-	width: 40vw;
-	height: 10vh;
-	font-size: 2rem;
+	width: 10vw;
+	height: 5vh;
+	font-size: 1.25rem;
 	margin: 5px;
+	background-color: white;
+	border-radius: 10px;
+	border: none;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .myButton {
