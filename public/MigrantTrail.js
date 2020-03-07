@@ -4,6 +4,7 @@ var globalButton1;
 var globalButton2;
 var globalButton3;
 var globalButton4;
+var globalRestartButton;
 var globalTextEntry;
 
 //global game variables
@@ -11,17 +12,21 @@ var globalStoryState;
 var globalPlayerName;
 var globalPlayerProfession;
 
-//Paused when user clicks UI or presses the button 'p'.
-//var isPaused = false;
+var globalTimer;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function gameLose(scenario) {
+    
+    closeUI();
+    console.log(globalRestartButton);
+    document.getElementById("timer").style.display = "none";
+    globalRestartButton.style.display = "initial";
+
     switch (scenario) {
         case 1:
-            closeUI();
             drawImage("Raqqa");
             drawText("You're indesiciveness caused you and you're family to starve")
         case 2:
@@ -32,6 +37,7 @@ function gameLose(scenario) {
 function startTimer(time) {
     var timeleft = time;
     var TIMER = setInterval(function () {
+        globalTimer = TIMER;
         if (timeleft <= 0) {
             clearInterval(TIMER);
             document.getElementById("timer").innerHTML = 0.00;
@@ -40,20 +46,24 @@ function startTimer(time) {
             gameLose(1);
 
         } else {
-            document.getElementById("timer").innerHTML = `Time Left ${Math.floor(timeleft)}`;
+            document.getElementById("timer").innerHTML = timeleft;
         }
-        timeleft -= 0.01;
-    }, 10);
+        timeleft -= 1;}, 1000);
 }
 
 //bind the user interface elements to global variables and start a new game
-function initializeGame(canvas, button1, button2, button3, button4, textEntry) {
+function initializeGame(canvas, button1, button2, button3, button4, textEntry, restartButton) {
+
+
     globalCanvas = canvas;
     globalButton1 = button1;
     globalButton2 = button2;
     globalButton3 = button3;
     globalButton4 = button4;
+    globalRestartButton = restartButton;
     globalTextEntry = textEntry;
+
+    console.log(globalRestartButton);
 
     newGame();
 
@@ -65,6 +75,8 @@ function newGame(state) {
     closeUI();
 
     globalStoryState = "Intro";
+
+    load()
     advanceStory();
 }
 
@@ -195,6 +207,7 @@ function closeUI() {
     globalButton3.style.display = "none";
     globalButton4.style.display = "none";
     globalTextEntry.style.display = "none";
+    globalRestartButton.style.display = "none";
 }
 
 
@@ -208,6 +221,8 @@ function closeUI() {
 function advanceStory(buttonNumber) {
     //the buttonNumber variable is an optional parameter, so set it to zero if it is unused
     if (typeof buttonNumber === 'undefined') { buttonNumber = 0; }
+
+    clearInterval(globalTimer);
 
     if (globalStoryState == "Intro") {
         drawImage("homescreen");
