@@ -259,9 +259,10 @@ function advanceStory(buttonNumber) {
             drawText("Even if you owned a car, you couldn't drive it out of the city unnoticed. You take a small toolkit with you anyway. Fortune favors the well prepared, you figure.");
             globalPlayerProfession = "Mechanic";
         }
-        globalStoryState = "escape";
+        globalStoryState = "JobStory";
     }
     else if (globalStoryState == "JobStory") {
+        drawText("test 123")
         setButton(1, "You decide to get to ")
 
     }
@@ -280,7 +281,7 @@ const save = () => {
 
     let payload = JSON.stringify({
         name: globalPlayerName,
-        //        profession: globalPlayerProfession,
+        profession: globalPlayerProfession,
         storyState: globalStoryState
     })
 
@@ -303,11 +304,15 @@ const load = () => {
 
     let gameInfo = JSON.parse(urldecode(document.cookie.replace("save=", "")));
 
-    closeUI();
+    console.log(gameInfo);
+
+    //  closeUI();
 
     globalPlayerProfession = gameInfo.profession;
     globalPlayerName = gameInfo.name;
     globalStoryState = gameInfo.storyState;
 
+    closeUI();
+    console.log(globalStoryState);
     advanceStory();
 }
