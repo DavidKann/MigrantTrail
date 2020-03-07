@@ -18,17 +18,18 @@ function sleep(ms) {
 }
 
 function gameLose(scenario) {
+    
+    closeUI();
 
     switch (scenario) {
         case 1:
             drawImage("Raqqa");
             drawText("You're indesiciveness caused you and you're family to starve")
         case 2: // Smugeler running away with your money
-            closeUI();
             drawImage("Raqqa")
-            drawText("gdabwhjdgwa")
+            drawText("The smuggler stole your money, are left stranded")
         case 3: // Get lost in the jungle
-            closeUI()
+            drawImage("Raqqa")
             drawText("You decide to escape by land through a jungle, you took a wrong turn, got lost and starved")
 
     }
@@ -282,32 +283,25 @@ function advanceStory(buttonNumber) {
 
         if (buttonNumber == 1) {
             if (Math.floor(Math.random() * 2)) {
-                closeUI();
-                drawText("You decided to pay a smuggler and they ran away with your money")
+                gameLose(2)
             } else {
                 globalStoryState = "ending";
-                advanceStory()
             }
         }
 
         if (buttonNumber == 2) {
             if (Math.floor(Math.random() * 2)) {
-                closeUI();
                 gameLose(3)
 
             } else {
                 globalStoryState = "ending";
-                advanceStory()
             }
         }
 
         // FIXME - Not moving to ending state
 
-    }
+    } else if (globalStoryState == "ending") {
 
-    else if (globalStoryState == "ending") {
-
-        closeUI()
 
         if (globalPlayerProfession == "MedStudent" && Math.floor(Math.random() * 2)) {
             drawText("You made it to Turkery where you got a job as a doctor");
