@@ -36,7 +36,6 @@ function gameLose(scenario) {
         case 3: // Get lost in the jungle
             closeUI()
             drawText("You decide to escape by land through a jungle, you took a wrong turn, got lost and starved")
-            drawImage("Jungle")
 
     }
 }
@@ -274,12 +273,14 @@ function advanceStory(buttonNumber) {
 
     }
     else if (globalStoryState == "escape") {
+        drawImage("Raqqa")
         drawText("You need to find a way out!")
         setButton(1, "You decide to pay a smuggler to help you escape by sea")
         setButton(2, "You decide to escape by land ")
 
         if (buttonNumber == 1) {
-            if (/*Math.floor(Math.random() * 2)*/ true) {
+            if (Math.floor(Math.random() * 2)) {
+                closeUI();
                 drawText("You decided to pay a smuggler and they ran away with your money")
             } else {
                 globalStoryState = "ending";
@@ -288,16 +289,33 @@ function advanceStory(buttonNumber) {
         }
 
         if (buttonNumber == 2) {
-            if (/*Math.floor(Math.random() * 2))*/ true) {
+            if (Math.floor(Math.random() * 2)) {
+                closeUI();
                 gameLose(3)
-            } else {
-                globalStoryState = "ending";
-                advanceStory()
             }
         }
+
+        // FIXME - Not moving to ending state
+        globalStoryState = "ending";
+        advanceStory()
     }
 
     else if (globalStoryState == "ending") {
+
+        if (globalPlayerProfession == "MedStudent" && Math.floor(Math.random() * 2)) {
+            drawText("You made it to Turkery where you got a job as a doctor");
+        }
+
+        else if (globalPlayerProfession == "HotelClerk" && Math.floor(Math.random() * 2)) {
+            drawText("You made it to Turkery where you got a job as a Hotel Clerk");
+        }
+
+        else if (globalPlayerProfession == "Mechanic" && Math.floor(Math.random() * 2)) {
+            drawText("You made it to Turkery where you got a job as a Mechanic");
+        }
+        else if (globalPlayerProfession == "OddJobs" && Math.floor(Math.random() * 5) > 4) {
+            drawText("You made it to Turkey where you someone you knew helped you get in illegally")
+        }
 
     }
 
