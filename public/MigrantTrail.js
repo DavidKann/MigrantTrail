@@ -18,33 +18,33 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function gameLose (scenario){
-    switch (scenario){
+function gameLose(scenario) {
+    switch (scenario) {
         case 1:
             closeUI();
             drawImage("Raqqa");
             drawText("You're indesiciveness caused you and you're family to starve")
         case 2:
-            //2nd loss state
+        //2nd loss state
     }
 }
 
-function startTimer (time){
+function startTimer(time) {
     var timeleft = time;
-    var TIMER = setInterval(function(){
-    if(timeleft <= 0){
-        clearInterval(TIMER);
-        document.getElementById("timer").innerHTML = 0.00;
-        sleep(500);
-        document.getElementById("timer").style.display = "none";
-        gameLose(1);
+    var TIMER = setInterval(function () {
+        if (timeleft <= 0) {
+            clearInterval(TIMER);
+            document.getElementById("timer").innerHTML = 0.00;
+            sleep(500);
+            document.getElementById("timer").style.display = "none";
+            gameLose(1);
 
-    } else {
-        document.getElementById("timer").innerHTML = timeleft;
-    }
-    timeleft -= 0.01;
-    console.log(timeleft);
-}, 10);}
+        } else {
+            document.getElementById("timer").innerHTML = `Time Left ${Math.floor(timeleft)}`;
+        }
+        timeleft -= 0.01;
+    }, 10);
+}
 
 //bind the user interface elements to global variables and start a new game
 function initializeGame(canvas, button1, button2, button3, button4, textEntry) {
@@ -209,8 +209,6 @@ function advanceStory(buttonNumber) {
     //the buttonNumber variable is an optional parameter, so set it to zero if it is unused
     if (typeof buttonNumber === 'undefined') { buttonNumber = 0; }
 
-    startTimer(10);
-
     if (globalStoryState == "Intro") {
         drawImage("homescreen");
         drawText("Your life is about to change forever. But first, who are you? Enter your name to start your Journey! In Migrant Trail, take on the role and face the hardship of a migrant fleeing conflict in Syria.");
@@ -223,6 +221,7 @@ function advanceStory(buttonNumber) {
     else if (globalStoryState == "EnterName") {
         if (globalTextEntry.value.length > 0) {
             globalPlayerName = globalTextEntry.value;
+            startTimer(30);
 
             drawImage("Raqqa");
             drawText("You and your family have been laying low in Raqqa for years now. The Islamic State has murdered many of your friends and family but you're still hoping to keep a low profile. '" + globalPlayerName + "', your mom tells you, 'Your father has been taken by IS and I hear you're next. We need to leave. Now.' You pause briefly to reflect on the life you are leaving behind: ");
@@ -243,6 +242,7 @@ function advanceStory(buttonNumber) {
 
     }
     else if (globalStoryState == "ChooseProfession") {
+
         if (buttonNumber == 1) {
             drawText("You've heard stories of how dangerous the migrant trail can be. You gather your small medical kit ominously expecting it to be useful.");
             globalPlayerProfession = "MedStudent";
