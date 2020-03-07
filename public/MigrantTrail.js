@@ -259,13 +259,26 @@ function advanceStory(buttonNumber) {
             drawText("Even if you owned a car, you couldn't drive it out of the city unnoticed. You take a small toolkit with you anyway. Fortune favors the well prepared, you figure.");
             globalPlayerProfession = "Mechanic";
         }
-        globalStoryState = "JobStory";
+        globalStoryState = "escape";
     }
-    else if (globalStoryState == "JobStory") {
-        drawText("test 123")
-        setButton(1, "You decide to get to ")
+    else if (globalStoryState == "escape") {
+        setButton(1, "You decide to escape by sea")
+        setButton(2, "You decide to escape by land ")
+
+        if (buttonNumber ==1)
+
+        if (Math.floor(Math.random() * 2)) {
+            drawText("You decided to pay a smuggler and they ran away with your money")
+        }  else {
+            drawText("You decided to pay a smuggler and they brought you and some other families to a boat by a truck")
+        }          
+        
+        //TODO
+        //Story Ideas
+        
 
     }
+    
     else {
         //entered an invalid story state
         console.log("Story State Not Found: " + globalStoryState);
