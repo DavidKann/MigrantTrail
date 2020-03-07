@@ -20,7 +20,8 @@ function sleep(ms) {
 function gameLose(scenario) {
     
     closeUI();
-
+    document.getElementById("timer").style.display = "none";
+    
     switch (scenario) {
         case 1:
             drawImage("Raqqa");
