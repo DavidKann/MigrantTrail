@@ -7,7 +7,6 @@
 
 <body onLoad="start()">
     <script>function start() {
-            initializeDebug(debugTextInput, debugSendCommand, debugTextOutput);
             initializeGame(gameCanvas, button1, button2, button3, button4, textEntry);
         }
     </script>
@@ -19,6 +18,8 @@
 
     <button onclick="save()">Save!</button>
 
+    <p id=timer></p>
+
     <p><canvas id="gameCanvas" width="800" height="500" style="border:1px solid #d3d3d3;"></canvas></p>
     <form><input id="textEntry" type="text" name="textEntry"></form>
 
@@ -28,10 +29,6 @@
     <p><input id="button2" class="myButton" type="button" value="choice 2" onclick="captureButton(2);" /></p>
     <p><input id="button3" class="myButton" type="button" value="choice 3" onclick="captureButton(3);" /></p>
     <p><input id="button4" class="myButton" type="button" value="choice 4" onclick="captureButton(4);" /></p>
-    <p><textarea id="debugTextInput" rows="4" cols="98"></textarea></p>
-    <p><input id="debugSendCommand" class="myButton" type="button" value="Send Command" onclick="debugSendCommand();" />
-    </p>
-    <p><textarea id="debugTextOutput" rows="4" cols="98"></textarea></p>
 </body>
 
 </html>
