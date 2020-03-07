@@ -345,24 +345,29 @@ const save = () => {
         storyState: globalStoryState
     })
 
-
-    axios.post('/api/save', {
-        save: payload
-    })
-        .then(function (response) {
-            console.log(response);
+    /*
+        axios.post('/api/save', {
+            save: payload
         })
-        .catch(function (error) {
-            console.log(error);
-        });
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    
+        console.log(payload)
+    */
 
-    console.log(payload)
+    return document.cookie = `save=${JSON.stringify(payload)}`
 }
 
 const load = () => {
     if (!document.cookie) return;
 
-    let gameInfo = JSON.parse(urldecode(document.cookie.replace("save=", "")));
+    //   let gameInfo = JSON.parse(urldecode(document.cookie.replace("save=", "")));
+    let data = document.cookie.replace("save=", "");
+    let gameInfo = JSON.parse(JSON.parse(data));
 
     console.log(gameInfo);
 
