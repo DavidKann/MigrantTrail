@@ -97,7 +97,7 @@ function debugLog(text) {
 }
 
 //reset the UI elements and reset the story
-function newGame() {
+function newGame(state) {
 
     closeUI();
 
@@ -293,11 +293,10 @@ function advanceStory(buttonNumber) {
             drawText("Even if you owned a car, you couldn't drive it out of the city unnoticed. You take a small toolkit with you anyway. Fortune favors the well prepared, you figure.");
             globalPlayerProfession = "Mechanic";
         }
-        globalStoryState = "JobStory";
+        globalStoryState = "escape";
     }
     else if (globalStoryState == "JobStory") {
-        //TODO
-        //Story Ideas
+        setButton(1, "You decide to get to ")
 
     }
     else {
@@ -315,7 +314,7 @@ const save = () => {
 
     let payload = JSON.stringify({
         name: globalPlayerName,
-        profession: globalPlayerProfession,
+        //        profession: globalPlayerProfession,
         storyState: globalStoryState
     })
 
@@ -334,11 +333,11 @@ const save = () => {
 }
 
 const load = () => {
-    if (!document.cookie) return
+    if (!document.cookie) return;
 
-    let gameInfo = JSON.parse(urldecode(document.cookie.replace("save=", "")))
+    let gameInfo = JSON.parse(urldecode(document.cookie.replace("save=", "")));
 
-    closeUI()
+    closeUI();
 
     globalPlayerProfession = gameInfo.profession;
     globalPlayerName = gameInfo.name;

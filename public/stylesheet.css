@@ -9,7 +9,8 @@
 body {
 	font-family: 'Montserrat', sans-serif;
 	position: relative;
-	background-color: #dcdcdc;
+	background: url("/img/fence.jpg") no-repeat center;
+	background-size: cover;
 }
 
 .content {
