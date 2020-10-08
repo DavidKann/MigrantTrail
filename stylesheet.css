@@ -9,7 +9,7 @@
 	background:-ms-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
 	background:linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0);
-	background-color:#ffffff;
+	background-color:lightyellow;
 	-moz-border-radius:6px;
 	-webkit-border-radius:6px;
 	border-radius:6px;
@@ -17,7 +17,7 @@
 	display:inline-block;
 	cursor:pointer;
 	color:#666666;
-	font-family:Arial;
+	font-family:sans-serif;
 	font-size:15px;
 	font-weight:bold;
 	padding:8px 50px;
@@ -37,4 +37,18 @@
 .myButton:active {
 	position:relative;
 	top:1px;
+}
+#heading
+{
+	background-color: purple;
+	font-family: sans-serif;
+	color: red;
+}
+#gameCanvas
+{
+	font-family: sans-serif;
+	background-color: lightblue;
+}
+body {
+	background-color: lightyellow;
 }
