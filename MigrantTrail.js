@@ -33,7 +33,7 @@ function initializeGame(canvas, button1, button2, button3, button4, textEntry) {
 
 //link to the debug UI controls
 function initializeDebug(debugTextInput, debugSendCommand, debugTextOutput) {
-        
+
     globalDebugTextInput = debugTextInput;
     globalDebugSendCommand = debugSendCommand;
     globalDebugTextOutput = debugTextOutput;
@@ -55,15 +55,15 @@ function debugSendCommand() {
         //split the debug text into single lines
         var indexOfNewLine = cmd.indexOf("\n");
         //include the last line without a newline character
-        if (indexOfNewLine < 0) {indexOfNewLine = cmd.length;} 
+        if (indexOfNewLine < 0) { indexOfNewLine = cmd.length; }
         var line = cmd.substr(0, indexOfNewLine);
         //check to see if the line follows the format "variable = value"
         if (line.includes("=")) {
             //pull the variable name and value
             var variable = line.substr(0, line.indexOf("="));
             //do not allow any non-alphanumeric characters in the variable name;
-            variable = variable.replace(/\W|_/g, "");            
-            var value = line.substr(line.indexOf("=")+1, line.length);
+            variable = variable.replace(/\W|_/g, "");
+            var value = line.substr(line.indexOf("=") + 1, line.length);
             value = value.trim();
             //only allow editing of variables that are global and start with the keyword "global"
             if (variable.substring(0, 6) == "global") {
@@ -71,10 +71,10 @@ function debugSendCommand() {
                     //set variable = value
                     eval(variable + " = " + value);
                     //if the variable was globalStoryState, also flag a reset of the story later
-                    if (variable == "globalStoryState") {setStoryState = true;}
+                    if (variable == "globalStoryState") { setStoryState = true; }
                     debugLog("Set " + variable + " to " + value);
                 }
-                catch (e){
+                catch (e) {
                     debugLog("Failed to evaluate: " + variable + " = " + value + "\nIs " + variable + " a global variable?");
                     debugLog(e);
                 }
@@ -82,9 +82,9 @@ function debugSendCommand() {
         }
         cmd = cmd.substr(indexOfNewLine + 1, cmd.length);
     } while (cmd.length > 0);
-    
+
     //if globalStoryState was changed, reset the story
-    if (setStoryState){
+    if (setStoryState) {
         advanceStory();
     }
 }
@@ -96,7 +96,7 @@ function debugLog(text) {
 
 //reset the UI elements and reset the story
 function newGame() {
-    
+
     closeUI();
     globalStoryState = "Intro";
     advanceStory();
@@ -105,14 +105,13 @@ function newGame() {
 //draw an image in the upper two thirds of the canvas.
 //the image name is passed as a parameter and must be type
 //png and have size 800 x 300 pixels
-function drawImage(imageName)
-{
+function drawImage(imageName) {
     try {
         var base_image = new Image();
         base_image.src = 'img/' + imageName + '.png';
-        base_image.onload = function(){
+        base_image.onload = function () {
             var ctx = globalCanvas.getContext("2d");
-          ctx.drawImage(base_image, 0, 0);
+            ctx.drawImage(base_image, 0, 0);
         }
     }
     catch (e) {
@@ -128,13 +127,13 @@ function drawText(text) {
     var ctx = globalCanvas.getContext("2d");
     //fill the space with a white rectangle to overwrite previous text
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0,300,800,500);
+    ctx.fillRect(0, 300, 800, 500);
     //draw two black border rectangles
-    ctx.rect(0,300,800,500);
+    ctx.rect(0, 300, 800, 500);
     ctx.stroke();
-    ctx.rect(5,305,790,190);
+    ctx.rect(5, 305, 790, 190);
     ctx.stroke();
-    
+
     //set the text font
     ctx.font = "20px Arial";
     ctx.fillStyle = "#000000";
@@ -165,7 +164,7 @@ function drawText(text) {
         }
         //var textLine = text.substr(0, 40);
         //text = text.substr(40, text.length);
-        ctx.fillText(textLine,30,335+30*i);
+        ctx.fillText(textLine, 30, 335 + 30 * i);
     }
     //if there is still text left, prompt a continue
     debugLog(text);
@@ -175,7 +174,7 @@ function drawText(text) {
 //default text into the textbox
 function acceptText(text) {
     if (typeof text === 'undefined') { text = ""; }
-    
+
     globalTextEntry.style.display = "initial";
     globalTextEntry.value = text;
 }
@@ -229,7 +228,7 @@ function closeUI() {
 function advanceStory(buttonNumber) {
     //the buttonNumber variable is an optional parameter, so set it to zero if it is unused
     if (typeof buttonNumber === 'undefined') { buttonNumber = 0; }
-    
+
     if (globalStoryState == "Intro") {
         drawImage("homescreen");
         drawText("Your life is about to change forever. But first, who are you? Enter your name to start your Journey! In Migrant Trail, take on the role and face the hardship of a migrant fleeing conflict in Syria.");
@@ -241,7 +240,7 @@ function advanceStory(buttonNumber) {
     else if (globalStoryState == "EnterName") {
         if (globalTextEntry.value.length > 0) {
             globalPlayerName = globalTextEntry.value;
-            
+
             drawImage("Raqqa");
             drawText("You and your family have been laying low in Raqqa for years now. The Islamic State has murdered many of your friends and family but you're still hoping to keep a low profile. '" + globalPlayerName + "', your mom tells you, 'Your father has been taken by IS and I hear you're next. We need to leave. Now.' You pause briefly to reflect on the life you are leaving behind: ");
 
@@ -249,7 +248,7 @@ function advanceStory(buttonNumber) {
             setButton(2, "I could only ever find odd-jobs even before things fell apart. Maybe there will be new opportunities ahead");
             setButton(3, "The hotel I used to work in is gone now, but I will miss the friends I made there");
             setButton(4, "Even though buisness has been good at the auto shop, if I need to leave then I need to leave");
-            
+
             globalStoryState = "ChooseProfession";
         }
         else {
@@ -258,7 +257,7 @@ function advanceStory(buttonNumber) {
             setButton(1, "Enter your name");
             globalStoryState = "EnterName";
         }
-        
+
     }
     else if (globalStoryState == "ChooseProfession") {
         if (buttonNumber == 1) {
@@ -286,4 +285,39 @@ function advanceStory(buttonNumber) {
         //entered an invalid story state
         debugLog("Story State Not Found: " + globalStoryState);
     }
+}
+
+function urldecode(str) {
+    return decodeURIComponent((str + '').replace(/\+/g, '%20'));
+}
+
+const save = () => {
+    if (globalStoryState == "Intro") return
+
+    let payload = JSON.stringify({
+        name: globalPlayerName,
+        profession: globalPlayerProfession,
+        storyState: globalStoryState
+    })
+
+    return document.cookie = `save=${JSON.stringify(payload)}`
+}
+
+const load = () => {
+    if (!document.cookie) return;
+
+    let data = document.cookie.replace("save=", "");
+    let gameInfo = JSON.parse(JSON.parse(data));
+
+    console.log(gameInfo);
+
+    //  closeUI();
+
+    globalPlayerProfession = gameInfo.profession;
+    globalPlayerName = gameInfo.name;
+    globalStoryState = gameInfo.storyState;
+
+    closeUI();
+    console.log(globalStoryState);
+    advanceStory();
 }
