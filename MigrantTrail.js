@@ -19,7 +19,7 @@ var globalDebugTextOutput;
 
 
 //bind the user interface elements to global variables and start a new game
-function initializeGame(canvas, button1, button2, button3, button4, textEntry) {
+function initializeGame(canvas, button1, button2, button3, button4, textEntry, story) {
     globalCanvas = canvas;
     globalButton1 = button1;
     globalButton2 = button2;
@@ -27,7 +27,9 @@ function initializeGame(canvas, button1, button2, button3, button4, textEntry) {
     globalButton4 = button4;
     globalTextEntry = textEntry;
 
-    newGame();
+    //story needs to be imported everywhere when it is used
+    //it is from the moudule file that calls the function
+    newGame(story);
 
 }
 
@@ -85,7 +87,7 @@ function debugSendCommand() {
     
     //if globalStoryState was changed, reset the story
     if (setStoryState){
-        advanceStory();
+        advanceStory(story);
     }
 }
 
@@ -95,11 +97,11 @@ function debugLog(text) {
 }
 
 //reset the UI elements and reset the story
-function newGame() {
+function newGame(story) {
     
     closeUI();
     globalStoryState = "Intro";
-    advanceStory();
+    advanceStory(story);
 }
 
 //draw an image in the upper two thirds of the canvas.
@@ -204,9 +206,9 @@ function setButton(buttonNumber, text) {
 //fires when one of the User Interface buttons is clicked
 //pass the button number that was clicked to the story
 //and reset the UI
-function captureButton(buttonNumber) {
+function captureButton(story, buttonNumber) {
     closeUI();
-    advanceStory(buttonNumber);
+    advanceStory(story, buttonNumber);
 }
 
 //reset the UI. Make all UI elements disabled
@@ -218,6 +220,8 @@ function closeUI() {
     globalTextEntry.style.display = "none";
 }
 
+
+//this function aims to change out all the user end info (eg. names) from the text in the story
 
 function replaceWord(searchedWord, objectToSearch, changeTo) {
     var indexNum;
@@ -246,7 +250,9 @@ function textProcessing(objectToSearch, searchedWords) {
 //global variable globalStoryState keeps track of which step in the story the user has reached
 //in each story stage, the image and/or text have to be reset with drawImage and drawText
 //additionally, the UI needs to be set up as it closes after every user input.
-function advanceStory(buttonNumber) {
+
+
+function advanceStory(story, buttonNumber) {
     var processedTest;
     //the buttonNumber variable is an optional parameter, so set it to zero if it is unused
     if (typeof buttonNumber === 'undefined') { buttonNumber = 0; }
@@ -264,9 +270,9 @@ function advanceStory(buttonNumber) {
     else if (globalStoryState == "EnterName") {
         if (globalTextEntry.value.length > 0) {
             globalPlayerName = globalTextEntry.value;
-            story.CommonInfo.Name = globalPlayerName;
+            //story.CommonInfo.xyz = globalPlayerName;
             
-            drawImage(story.EnterName.Image);
+            drawImage(story.EnterName.image);
             drawText(story.EnterName.text);
 
             setButton(1, story.EnterName.buttonOne);
