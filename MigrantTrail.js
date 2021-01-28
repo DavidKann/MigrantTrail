@@ -29,6 +29,7 @@ function initializeGame(canvas, button1, button2, button3, button4, textEntry, s
 
     //story needs to be imported everywhere when it is used
     //it is from the moudule file that calls the function
+    console.log(story.Intro);
     newGame(story);
 
 }
@@ -100,6 +101,7 @@ function debugLog(text) {
 function newGame(story) {
     
     closeUI();
+    console.log(story.Intro);
     globalStoryState = "Intro";
     advanceStory(story);
 }
@@ -107,11 +109,12 @@ function newGame(story) {
 //draw an image in the upper two thirds of the canvas.
 //the image name is passed as a parameter and must be type
 //png and have size 800 x 300 pixels
-function drawImage(imageName)
+function drawImage(story, storyStage)
 {
     try {
         var base_image = new Image();
-        base_image.src = 'img/' + imageName + '.png';
+        var imageName = eval("story." + storyStage + ".image")
+        base_image.src = "img/" + imageName + ".png";
         base_image.onload = function(){
             var ctx = globalCanvas.getContext("2d");
           ctx.drawImage(base_image, 0, 0);
@@ -253,6 +256,7 @@ function textProcessing(objectToSearch, searchedWords) {
 
 
 function advanceStory(story, buttonNumber) {
+    console.log(story.Intro)
     var processedTest;
     //the buttonNumber variable is an optional parameter, so set it to zero if it is unused
     if (typeof buttonNumber === 'undefined') { buttonNumber = 0; }
@@ -260,7 +264,7 @@ function advanceStory(story, buttonNumber) {
     //possibly have searchig function here to find the story in the storyline file instead
     //of using if statements as the story will get longer
     if (globalStoryState == "Intro") {
-        drawImage(story.Intro.image);
+        drawImage(story, globalStoryState);
         drawText(story.Intro.text);
 
         acceptText();
@@ -270,9 +274,9 @@ function advanceStory(story, buttonNumber) {
     else if (globalStoryState == "EnterName") {
         if (globalTextEntry.value.length > 0) {
             globalPlayerName = globalTextEntry.value;
-            //story.CommonInfo.xyz = globalPlayerName;
+            story.CommonInfo.xyz = globalPlayerName;
             
-            drawImage(story.EnterName.image);
+            drawImage(story, globalStoryState);
             drawText(story.EnterName.text);
 
             setButton(1, story.EnterName.buttonOne);

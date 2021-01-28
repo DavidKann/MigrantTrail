@@ -1,6 +1,7 @@
 export var story = {
+
     CommonInfo : {
-        xyz : "bob"
+        xyz : "haha"
     },
     Intro : {
         image : "homescreen", 
@@ -15,6 +16,7 @@ export var story = {
         buttonThree : "The hotel I used to work in is gone now, but I will miss the friends I made there", 
         buttonFour : "Even though buisness has been good at the auto shop, if I need to leave then I need to leave"
     }
+
 }
 
 
