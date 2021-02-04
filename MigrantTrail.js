@@ -11,15 +11,53 @@ var globalStoryState;
 var globalPlayerName;
 var globalPlayerProfession;
 
-//debug variables
-//NOTE: ALL GLOBAL VARIABLES MUST START WITH "global" OR THE WILL NOT BE EDITABLE BY THE DEBUG TEXT INPUT FEATURE
-var globalDebugTextInput;
-var globalDebugSendCommand;
-var globalDebugTextOutput;
+var globalTimer;
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function gameLose(scenario) {
+    
+    closeUI();
+    document.getElementById("timer").style.display = "none";
+    
+    switch (scenario) {
+        case 1:
+            drawImage("Raqqa");
+            drawText("You're indesiciveness caused you and you're family to starve")
+        case 2: // Smugeler running away with your money
+            drawImage("Raqqa")
+            drawText("The smuggler stole your money, are left stranded")
+        case 3: // Get lost in the jungle
+            drawImage("Raqqa")
+            drawText("You decide to escape by land through a jungle, you took a wrong turn, got lost and starved")
+
+    }
+}
+
+function startTimer(time) {
+    var timeleft = time;
+    var TIMER = setInterval(function () {
+        globalTimer = TIMER;
+        if (timeleft <= 0) {
+            clearInterval(TIMER);
+            document.getElementById("timer").innerHTML = 0.00;
+            sleep(500);
+            document.getElementById("timer").style.display = "none";
+            gameLose(1);
+
+        } else {
+            document.getElementById("timer").innerHTML = timeleft;
+        }
+        timeleft -= 1;
+    }, 1000);
+}
 
 //bind the user interface elements to global variables and start a new game
 function initializeGame(canvas, button1, button2, button3, button4, textEntry) {
+
+
     globalCanvas = canvas;
     globalButton1 = button1;
     globalButton2 = button2;
@@ -27,9 +65,6 @@ function initializeGame(canvas, button1, button2, button3, button4, textEntry) {
     globalButton4 = button4;
     globalTextEntry = textEntry;
 
-    newGame();
-
-}
 
 //link to the debug UI controls
 function initializeDebug(debugTextInput, debugSendCommand, debugTextOutput) {
@@ -88,17 +123,19 @@ function debugSendCommand() {
         advanceStory();
     }
 }
+    newGame();
 
-//add "text" to the debugTextOutput box
-function debugLog(text) {
-    globalDebugTextOutput.value = globalDebugTextOutput.value + "\n" + text;
 }
 
 //reset the UI elements and reset the story
 function newGame() {
+function newGame(state) {
 
     closeUI();
+
     globalStoryState = "Intro";
+
+    load()
     advanceStory();
 }
 
@@ -115,8 +152,8 @@ function drawImage(imageName) {
         }
     }
     catch (e) {
-        debugLog("Failed to load : img/" + imageName + ".png does it exist?");
-        debugLog(e);
+        console.log("Failed to load : img/" + imageName + ".png does it exist?");
+        console.log(e);
     }
 }
 
@@ -167,7 +204,7 @@ function drawText(text) {
         ctx.fillText(textLine, 30, 335 + 30 * i);
     }
     //if there is still text left, prompt a continue
-    debugLog(text);
+    console.log(text);
 }
 
 //make the text box visible. optional parameter to enter
@@ -203,11 +240,25 @@ function setButton(buttonNumber, text) {
 //fires when one of the User Interface buttons is clicked
 //pass the button number that was clicked to the story
 //and reset the UI
+//function toPause() {
+//    isPaused = ! isPaused
+//}
+
 function captureButton(buttonNumber) {
+    //if (!isPaused){
     closeUI();
     advanceStory(buttonNumber);
+    //} else {
+    //    pauseMenu();
+    //}
 }
 
+//function pauseMenu(){
+//Set background semi-transparent
+//Nullifies all surrounding taps
+//Settings?
+//Saves --> gameState cookie.
+//}
 //reset the UI. Make all UI elements disabled
 function closeUI() {
     globalButton1.style.display = "none";
@@ -229,6 +280,9 @@ function advanceStory(buttonNumber) {
     //the buttonNumber variable is an optional parameter, so set it to zero if it is unused
     if (typeof buttonNumber === 'undefined') { buttonNumber = 0; }
 
+
+    clearInterval(globalTimer);
+
     if (globalStoryState == "Intro") {
         drawImage("homescreen");
         drawText("Your life is about to change forever. But first, who are you? Enter your name to start your Journey! In Migrant Trail, take on the role and face the hardship of a migrant fleeing conflict in Syria.");
@@ -236,10 +290,13 @@ function advanceStory(buttonNumber) {
         acceptText();
         setButton(1, "Enter your name");
         globalStoryState = "EnterName";
+
     }
     else if (globalStoryState == "EnterName") {
         if (globalTextEntry.value.length > 0) {
             globalPlayerName = globalTextEntry.value;
+
+            startTimer(30);
 
             drawImage("Raqqa");
             drawText("You and your family have been laying low in Raqqa for years now. The Islamic State has murdered many of your friends and family but you're still hoping to keep a low profile. '" + globalPlayerName + "', your mom tells you, 'Your father has been taken by IS and I hear you're next. We need to leave. Now.' You pause briefly to reflect on the life you are leaving behind: ");
@@ -260,30 +317,73 @@ function advanceStory(buttonNumber) {
 
     }
     else if (globalStoryState == "ChooseProfession") {
+
         if (buttonNumber == 1) {
-            drawText("You've heard stories of how dangerous the migrant trail can be. You gather your small medical kit ominously expecting it to be useful.");
             globalPlayerProfession = "MedStudent";
         }
         else if (buttonNumber == 2) {
-            drawText("When times were tough you would call on your extensive contacts network for work wherever it could be found. You couldn't imagine leaving without it and tuck it into your pocket.");
             globalPlayerProfession = "OddJobs";
         }
         else if (buttonNumber == 3) {
-            drawText("You had always enjoyed chatting with guests at the hotel; especially the foreigners. Over time you developed up a functional vocabulary in several languages. You don't know where your journey will take you but you expect to need to ask for some help along the way.");
             globalPlayerProfession = "HotelClerk";
         }
         else if (buttonNumber == 4) {
-            drawText("Even if you owned a car, you couldn't drive it out of the city unnoticed. You take a small toolkit with you anyway. Fortune favors the well prepared, you figure.");
             globalPlayerProfession = "Mechanic";
+
         }
-        globalStoryState = "ChoosePersonalItem";
+
+        globalStoryState = "escape";
+        advanceStory();
+
     }
-    else if (globalStoryState == "ChoosePersonalItem") {
-        //TODO
+    else if (globalStoryState == "escape") {
+        drawImage("Raqqa")
+        drawText("You need to find a way out!")
+        setButton(1, "You decide to pay a smuggler to help you escape by sea")
+        setButton(2, "You decide to escape by land ")
+
+        if (buttonNumber == 1) {
+            if (Math.floor(Math.random() * 2)) {
+                gameLose(2)
+            } else {
+                globalStoryState = "ending";
+            }
+        }
+
+        if (buttonNumber == 2) {
+            if (Math.floor(Math.random() * 2)) {
+                gameLose(3)
+
+            } else {
+                globalStoryState = "ending";
+            }
+        }
+
+        // FIXME - Not moving to ending state
+
+    } else if (globalStoryState == "ending") {
+
+
+        if (globalPlayerProfession == "MedStudent" && Math.floor(Math.random() * 2)) {
+            drawText("You made it to Turkery where you got a job as a doctor");
+        }
+
+        else if (globalPlayerProfession == "HotelClerk" && Math.floor(Math.random() * 2)) {
+            drawText("You made it to Turkery where you got a job as a Hotel Clerk");
+        }
+
+        else if (globalPlayerProfession == "Mechanic" && Math.floor(Math.random() * 2)) {
+            drawText("You made it to Turkery where you got a job as a Mechanic");
+        }
+        else if (globalPlayerProfession == "OddJobs" && Math.floor(Math.random() * 5) > 4) {
+            drawText("You made it to Turkey where you someone you knew helped you get in illegally")
+        }
+
     }
+
     else {
         //entered an invalid story state
-        debugLog("Story State Not Found: " + globalStoryState);
+        console.log("Story State Not Found: " + globalStoryState);
     }
 }
 
@@ -300,12 +400,28 @@ const save = () => {
         storyState: globalStoryState
     })
 
+    /*
+        axios.post('/api/save', {
+            save: payload
+        })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    
+        console.log(payload)
+    */
+
+
     return document.cookie = `save=${JSON.stringify(payload)}`
 }
 
 const load = () => {
     if (!document.cookie) return;
 
+    //   let gameInfo = JSON.parse(urldecode(document.cookie.replace("save=", "")));
     let data = document.cookie.replace("save=", "");
     let gameInfo = JSON.parse(JSON.parse(data));
 

@@ -1,4 +1,58 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+h1 {
+	font-size: 2em;
+}
+
+body {
+	font-size: 1.5rem;
+	font-family: 'Montserrat', sans-serif;
+	position: relative;
+	background: url("/img/fence.jpg") no-repeat center;
+	background-size: cover;
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	position: absolute;
+  	top: 50%;
+  	left: 50%;
+  	transform: translate(-50%, -50%);
+
+	background-color: white;
+	padding: 25px;
+	border-radius: 15px;
+
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.buttons {
+	display: flex;
+	flex-direction: row;
+}
+
+button {
+	width: 10vw;
+	height: 5vh;
+	font-size: 1.25rem;
+	margin: 5px;
+	background-color: white;
+	border-radius: 10px;
+	border: none;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
 .myButton {
+	position: relative;
 	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
 	box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -23,6 +77,8 @@
 	padding:8px 50px;
 	text-decoration:none;
 	text-shadow:0px 1px 0px #ffffff;
+	left:50%;
+	transform: translate(-50%, 0);
 }
 .myButton:hover {
 	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f6f6f6), color-stop(1, #ffffff));
@@ -37,4 +93,11 @@
 .myButton:active {
 	position:relative;
 	top:1px;
+}
+
+#textEntry {
+	width: 50vw;
+	height: 5vh;
+	font-size: 1.5rem;
+	text-align: center;
 }
