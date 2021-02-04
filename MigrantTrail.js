@@ -66,11 +66,69 @@ function initializeGame(canvas, button1, button2, button3, button4, textEntry) {
     globalTextEntry = textEntry;
 
 
+//link to the debug UI controls
+function initializeDebug(debugTextInput, debugSendCommand, debugTextOutput) {
+
+    globalDebugTextInput = debugTextInput;
+    globalDebugSendCommand = debugSendCommand;
+    globalDebugTextOutput = debugTextOutput;
+
+    debugLog("Debug Log:");
+}
+
+//parse the text in the debug text input box to assign global variable values and/or trigger game states
+//One variable assign per line. Assigning globalStoryState also triggers a reset of the story state
+//
+// for example:
+//  globalPlayerName = "David"
+//  globalStoryState = "EnterName"
+// would set the two global variables and reset the story state by calling advanceStory();
+function debugSendCommand() {
+    var cmd = globalDebugTextInput.value;
+    var setStoryState = false;
+    do {
+        //split the debug text into single lines
+        var indexOfNewLine = cmd.indexOf("\n");
+        //include the last line without a newline character
+        if (indexOfNewLine < 0) { indexOfNewLine = cmd.length; }
+        var line = cmd.substr(0, indexOfNewLine);
+        //check to see if the line follows the format "variable = value"
+        if (line.includes("=")) {
+            //pull the variable name and value
+            var variable = line.substr(0, line.indexOf("="));
+            //do not allow any non-alphanumeric characters in the variable name;
+            variable = variable.replace(/\W|_/g, "");
+            var value = line.substr(line.indexOf("=") + 1, line.length);
+            value = value.trim();
+            //only allow editing of variables that are global and start with the keyword "global"
+            if (variable.substring(0, 6) == "global") {
+                try {
+                    //set variable = value
+                    eval(variable + " = " + value);
+                    //if the variable was globalStoryState, also flag a reset of the story later
+                    if (variable == "globalStoryState") { setStoryState = true; }
+                    debugLog("Set " + variable + " to " + value);
+                }
+                catch (e) {
+                    debugLog("Failed to evaluate: " + variable + " = " + value + "\nIs " + variable + " a global variable?");
+                    debugLog(e);
+                }
+            }
+        }
+        cmd = cmd.substr(indexOfNewLine + 1, cmd.length);
+    } while (cmd.length > 0);
+
+    //if globalStoryState was changed, reset the story
+    if (setStoryState) {
+        advanceStory();
+    }
+}
     newGame();
 
 }
 
 //reset the UI elements and reset the story
+function newGame() {
 function newGame(state) {
 
     closeUI();
@@ -222,6 +280,7 @@ function advanceStory(buttonNumber) {
     //the buttonNumber variable is an optional parameter, so set it to zero if it is unused
     if (typeof buttonNumber === 'undefined') { buttonNumber = 0; }
 
+
     clearInterval(globalTimer);
 
     if (globalStoryState == "Intro") {
@@ -236,6 +295,7 @@ function advanceStory(buttonNumber) {
     else if (globalStoryState == "EnterName") {
         if (globalTextEntry.value.length > 0) {
             globalPlayerName = globalTextEntry.value;
+
             startTimer(30);
 
             drawImage("Raqqa");
@@ -353,6 +413,7 @@ const save = () => {
     
         console.log(payload)
     */
+
 
     return document.cookie = `save=${JSON.stringify(payload)}`
 }
