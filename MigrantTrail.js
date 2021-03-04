@@ -18,10 +18,10 @@ function sleep(ms) {
 }
 
 function gameLose(scenario) {
-    
+
     closeUI();
     document.getElementById("timer").style.display = "none";
-    
+
     switch (scenario) {
         case 1:
             drawImage("Raqqa");
@@ -54,18 +54,6 @@ function startTimer(time) {
     }, 1000);
 }
 
-//bind the user interface elements to global variables and start a new game
-function initializeGame(canvas, button1, button2, button3, button4, textEntry) {
-
-
-    globalCanvas = canvas;
-    globalButton1 = button1;
-    globalButton2 = button2;
-    globalButton3 = button3;
-    globalButton4 = button4;
-    globalTextEntry = textEntry;
-
-
 //link to the debug UI controls
 function initializeDebug(debugTextInput, debugSendCommand, debugTextOutput) {
 
@@ -73,7 +61,7 @@ function initializeDebug(debugTextInput, debugSendCommand, debugTextOutput) {
     globalDebugSendCommand = debugSendCommand;
     globalDebugTextOutput = debugTextOutput;
 
-    debugLog("Debug Log:");
+    //debugLog("Debug Log:");
 }
 
 //parse the text in the debug text input box to assign global variable values and/or trigger game states
@@ -107,11 +95,11 @@ function debugSendCommand() {
                     eval(variable + " = " + value);
                     //if the variable was globalStoryState, also flag a reset of the story later
                     if (variable == "globalStoryState") { setStoryState = true; }
-                    debugLog("Set " + variable + " to " + value);
+                    //debugLog("Set " + variable + " to " + value);
                 }
                 catch (e) {
-                    debugLog("Failed to evaluate: " + variable + " = " + value + "\nIs " + variable + " a global variable?");
-                    debugLog(e);
+                    //debugLog("Failed to evaluate: " + variable + " = " + value + "\nIs " + variable + " a global variable?");
+                    //debugLog(e);
                 }
             }
         }
@@ -123,13 +111,24 @@ function debugSendCommand() {
         advanceStory();
     }
 }
+
+//bind the user interface elements to global variables and start a new game
+function initializeGame(canvas, button1, button2, button3, button4, textEntry) {
+
+
+    globalCanvas = canvas;
+    globalButton1 = button1;
+    globalButton2 = button2;
+    globalButton3 = button3;
+    globalButton4 = button4;
+    globalTextEntry = textEntry;
+
     newGame();
 
 }
 
 //reset the UI elements and reset the story
 function newGame() {
-function newGame(state) {
 
     closeUI();
 
