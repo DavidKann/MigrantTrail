@@ -2,45 +2,137 @@
 const canvas = document.querySelector ("#canvas"); 
 
 const timerText = document.querySelector ("#timer"); 
-
-const button1 = document.querySelector ("#button1"); 
-const button2 = document.querySelector ("#button2"); 
-const button3 = document.querySelector ("#button3"); 
-const button4 = document.querySelector ("#button4"); 
-
-const nameInput = document.querySelector ("#nameInput"); 
+const choiceButtons = document.querySelectorAll (".choiceButtons"); 
+const inputField = document.querySelector ("#nameInput"); 
 
 const saveButton = document.querySelector ("#save")
-
-// Global debug variables
-const debutTextInput = document.querySelector ("#debugTextInput"); 
-const debutSendCommand = document.querySelector ("#debugSendCommand"); 
-const debutTextOutput = document.querySelector ("#debugTextOutput"); 
+const restartButton = document.querySelector ("#restart"); 
 
 // Global game variables
-let timer = 0; 
+let timeLeft = 0; 
+let countdown = 0; // Holds setInterval state
 
-let storyState = ""; // Keeps track of which step in the story the user has reached
+const FADETIME = 400; // Choice button fade length in milliseconds
+
 let playerName = ""; 
-let playerProfession = ""; 
+let profession = ""; 
+let storyStage = 0; 
 
-const sleep = (ms) => { return new Promise(resolve => setTimeout(resolve, ms)); }
+// STORY STRUCTURE
+// Each story stage, input field and all buttons disabled
+// Call setImage, setText, setInputField, or setButton to enable required elements for stage
+// Odd storyState used for displaying data. End odd storyStages with storyStage++ and advanceStory ()
+// Even storyState used for getting input. End even storyStages with storyStage++ and advanceStory ()
+const advanceStory = (buttonIndex) => 
+{
+    switch (storyStage) {
+        case 0:
+            console.log ("DISPLAY Enter Name")
+            setImage ("homescreen"); 
+            setText ("Your life is about to change forever. But first, who are you? Enter your name to start your Journey! In Migrant Trail, take on the role and face the hardship of a migrant fleeing conflict in Syria."); 
+            setInputField (); 
+            setButton (1, "Enter your name"); 
+            storyStage++; 
+            break;
+        case 1:
+            console.log ("INPUT Enter Name")
+            if (inputField.value.length > 0) 
+            {
+                playerName = inputField.value;
+                
+                startTimer(); 
+                
+                storyStage ++; 
+                advanceStory (); 
+            }
+            else
+            {
+                setImage ("homescreen");
+                setText("Enter a name in the box below. Your name must be at least one character long.");
+                setInputField();
+                setButton(1, "Enter your name");
+            }
+            break; 
+        case 2: 
+            console.log ("DISPLAY professions"); 
+            setImage("Raqqa");
+            setText("You and your family have been laying low in Raqqa for years now. The Islamic State has murdered many of your friends and family but you're still hoping to keep a low profile. '" + playerName + "', your mom tells you, 'Your father has been taken by IS and I hear you're next. We need to leave. Now.' You pause briefly to reflect on the life you are leaving behind: ");
+            setButton(1, "I was only a medical student, but I'm proud of the people I helped in our make-shift clinic");
+            setButton(2, "I could only ever find odd-jobs even before things fell apart. Maybe there will be new opportunities ahead");
+            setButton(3, "The hotel I used to work in is gone now, but I will miss the friends I made there");
+            setButton(4, "Even though buisness has been good at the auto shop, if I need to leave then I need to leave");
+            storyStage++; 
+            break; 
+
+        case 3: 
+            console.log ("INPUT professions"); 
+            if (buttonIndex == 1) profession = "MedStudent"; 
+            if (buttonIndex == 2) profession = "OddJobs"; 
+            if (buttonIndex == 3) profession = "HotelClerk"; 
+            if (buttonIndex == 4) profession = "Mechanic"; 
+            storyStage ++; 
+            advanceStory (); 
+            break; 
+        case 4: 
+            console.log ("DISPLAY Escape Options"); 
+            setImage("Raqqa"); 
+            setText("You need to find a way out!"); 
+            setButton(1, "You decide to pay a smuggler to help you escape by sea"); 
+            setButton(2, "You decide to escape by land"); 
+            storyStage++; 
+            break; 
+        case 5: 
+            console.log ("INPUT Escape Options"); 
+
+            if (Math.floor (Math.random () * 2) == 0)
+                gameOver (buttonIndex == 1 ? 2 : 3); 
+            else
+            {
+                storyStage ++; 
+                advanceStory (); 
+            }
+            break; 
+        case 6: 
+            console.log ("DISPLAY Success"); 
+            if (profession == "MedStudent") setText("You made it to Turkery where you got a job as a doctor");
+            else if (profession == "HotelClerk") setText("You made it to Turkery where you got a job as a Hotel Clerk");
+            else if (profession == "Mechanic") setText("You made it to Turkery where you got a job as a Mechanic");
+            else setText("You made it to Turkey where you someone you knew helped you get in illegally"); 
+            setTimer (timeLeft); // Stop timer
+            break; 
+        default:
+            console.log("Story state " + storyStage + " not found"); 
+            break; 
+    }
+}
 
 // Reset UI and story
-let newGame = ()  =>
+const newGame = ()  =>
 {
-    resetUI();
+    setTimer (30); 
 
-    storyState = "Intro";
+    choiceButtons.forEach(button => // If restart button used, need to reset default classes
+    {
+        button.className = ""; 
+        button.classList.add ("choiceButtons", "fadedOut"); 
+    });
 
+    inputField.className = ""; 
+    inputField.classList.add ("fadedOut"); 
+    
+    resetUI(); 
+
+    storyStage = 0;
+
+    inputField.value = ""; 
+    
     load()
-    advanceStory();
+    advanceStory(); 
 }
 
 // Draw image in upper two thirds of canvas
-// Image name passed as a parameter
 // Must be png and have size 800x300 pixels
-let drawImage = (imageName) =>
+const setImage = (imageName) =>
 {
     try 
     {
@@ -56,8 +148,7 @@ let drawImage = (imageName) =>
 }
 
 // Draw textbox in lower thrid of canvas
-// Pass text as parameter then parse to lines
-let drawText = (text) => 
+const setText = (text) => 
 {
     const ctx = canvas.getContext("2d"); 
     // Fill space white to overwrite previous text
@@ -103,308 +194,181 @@ let drawText = (text) =>
         
         ctx.fillText(textLine, 30, 335 + 30 * i);
     }
-    //if there is still text left, prompt a continue
-    console.log(text);
 }
 
-// Game story
-// Optional parameter buttonNumber is the UI button that was clicked
-// Each story stage image and text have to be reset with drawImage and drawText
-// UI needs to be set up as it closes after every user input
-let advanceStory = (buttonNumber) => 
+// Enables input field
+const setInputField = () => 
 {
-    if (typeof buttonNumber === 'undefined') 
-        buttonNumber = 0; 
+    if (storyStage != 0)
+        setTimeout(() => { fadeIn (inputField); }, FADETIME); 
+    else
+        fadeIn (inputField); 
+}
 
-    clearInterval(timer);
-
-    if (storyState == "Intro") 
+// Enables button and updates text
+const setButton = (buttonIndex, text) => 
+{
+    if (storyStage != 0)
     {
-        drawImage("homescreen");
-        drawText("Your life is about to change forever. But first, who are you? Enter your name to start your Journey! In Migrant Trail, take on the role and face the hardship of a migrant fleeing conflict in Syria.");
-
-        acceptText();
-        setButton(1, "Enter your name");
-        storyState = "EnterName";
-    }
-    else if (storyState == "EnterName") 
-    {
-        if (nameInput.value.length > 0) 
-        {
-            playerName = nameInput.value;
-
-            startTimer(30);
-
-            drawImage("Raqqa");
-            drawText("You and your family have been laying low in Raqqa for years now. The Islamic State has murdered many of your friends and family but you're still hoping to keep a low profile. '" + playerName + "', your mom tells you, 'Your father has been taken by IS and I hear you're next. We need to leave. Now.' You pause briefly to reflect on the life you are leaving behind: ");
-
-            setButton(1, "I was only a medical student, but I'm proud of the people I helped in our make-shift clinic");
-            setButton(2, "I could only ever find odd-jobs even before things fell apart. Maybe there will be new opportunities ahead");
-            setButton(3, "The hotel I used to work in is gone now, but I will miss the friends I made there");
-            setButton(4, "Even though buisness has been good at the auto shop, if I need to leave then I need to leave");
-
-            storyState = "ChooseProfession";
-        }
-        else 
-        {
-            drawText("Enter a name in the box below. Your name must be at least one character long.");
-            acceptText();
-            setButton(1, "Enter your name");
-            storyState = "EnterName";
-        }
-    }
-    else if (storyState == "ChooseProfession") {
-
-        if (buttonNumber == 1) 
-            playerProfession = "MedStudent";
-        else if (buttonNumber == 2) 
-            playerProfession = "OddJobs";
-        else if (buttonNumber == 3) 
-            playerProfession = "HotelClerk";
-        else if (buttonNumber == 4) 
-            playerProfession = "Mechanic";
-
-        storyState = "escape";
-        advanceStory();
-    }
-    else if (storyState == "escape") {
-        drawImage("Raqqa")
-        drawText("You need to find a way out!")
-        setButton(1, "You decide to pay a smuggler to help you escape by sea")
-        setButton(2, "You decide to escape by land")
-
-        if (buttonNumber == 1) 
-        {
-            if (Math.floor(Math.random() * 2))
-                gameLose(2)
-            else 
-                storyState = "ending";
-        }
-
-        if (buttonNumber == 2) {
-            if (Math.floor(Math.random() * 2))
-                gameLose(3)
-            else
-                storyState = "ending";
-        }
-    } 
-    else if (storyState == "ending") 
-    {
-        if (playerProfession == "MedStudent" && Math.floor(Math.random() * 2))
-            drawText("You made it to Turkery where you got a job as a doctor");
-        else if (playerProfession == "HotelClerk" && Math.floor(Math.random() * 2))
-            drawText("You made it to Turkery where you got a job as a Hotel Clerk");
-        else if (playerProfession == "Mechanic" && Math.floor(Math.random() * 2))
-            drawText("You made it to Turkery where you got a job as a Mechanic");
-        else if (playerProfession == "OddJobs" && Math.floor(Math.random() * 5) > 4) 
-            drawText("You made it to Turkey where you someone you knew helped you get in illegally")
+        setTimeout(() => 
+        { 
+            fadeIn (choiceButtons [buttonIndex - 1]); 
+            choiceButtons [buttonIndex - 1].value = text; 
+        }, FADETIME); 
     }
     else
-        console.log("Story state " + storyState + " not found");
-}
-
-// Make nameInput textbox visible. 
-// Optional parameter for default text
-let acceptText = (text) => 
-{
-    if (typeof text === 'undefined') { text = ""; }
-
-    nameInput.style.display = "initial"; 
-    nameInput.value = text; 
-}
-
-// Make button buttonNumvber visible. 
-// Updates text of button
-let setButton = (buttonNumber, text) => 
-{
-    if (buttonNumber == 1) 
     {
-        button1.style.display = "initial";
-        button1.value = text;
-    }
-    else if (buttonNumber == 2) 
-    {
-        button2.style.display = "initial";
-        button2.value = text;
-    }
-    else if (buttonNumber == 3) 
-    {
-        button3.style.display = "initial";
-        button3.value = text;
-    }
-    else if (buttonNumber == 4) 
-    {
-        button4.style.display = "initial";
-        button4.value = text;
+        fadeIn (choiceButtons [buttonIndex - 1]);
+        choiceButtons [buttonIndex - 1].value = text; 
     }
 }
 
-let startTimer = (time) =>
-{
-    let timeleft = time;
-
-    let TIMER = setInterval(() => {
-        timer = TIMER;
-        if (timeleft <= 0) 
-        {
-            clearInterval(TIMER);
-            timerText.innerHTML = 0.00;
-            sleep(500);
-            // timerText.style.display = "none";
-            gameLose(1);
-        } 
-        else 
-            timerText.innerHTML = timeleft;
-        
-        timeleft -= 1;
-    }, 1000);
-}
-
-//parse the text in the debug text input box to assign global variable values and/or trigger game states
-//One variable assign per line. Assigning globalStoryState also triggers a reset of the story state
-//
-// for example:
-//  globalPlayerName = "David"
-//  globalStoryState = "EnterName"
-// would set the two global variables and reset the story state by calling advanceStory();
-// function debugSendCommand() {
-//     var cmd = globalDebugTextInput.value;
-//     var setStoryState = false;
-//     do {
-//         //split the debug text into single lines
-//         var indexOfNewLine = cmd.indexOf("\n");
-//         //include the last line without a newline character
-//         if (indexOfNewLine < 0) { indexOfNewLine = cmd.length; }
-//         var line = cmd.substr(0, indexOfNewLine);
-//         //check to see if the line follows the format "variable = value"
-//         if (line.includes("=")) {
-//             //pull the variable name and value
-//             var variable = line.substr(0, line.indexOf("="));
-//             //do not allow any non-alphanumeric characters in the variable name;
-//             variable = variable.replace(/\W|_/g, "");
-//             var value = line.substr(line.indexOf("=") + 1, line.length);
-//             value = value.trim();
-//             //only allow editing of variables that are global and start with the keyword "global"
-//             if (variable.substring(0, 6) == "global") {
-//                 try {
-//                     //set variable = value
-//                     eval(variable + " = " + value);
-//                     //if the variable was globalStoryState, also flag a reset of the story later
-//                     if (variable == "globalStoryState") { setStoryState = true; }
-//                     //debugLog("Set " + variable + " to " + value);
-//                 }
-//                 catch (e) {
-//                     //debugLog("Failed to evaluate: " + variable + " = " + value + "\nIs " + variable + " a global variable?");
-//                     //debugLog(e);
-//                 }
-//             }
-//         }
-//         cmd = cmd.substr(indexOfNewLine + 1, cmd.length);
-//     } while (cmd.length > 0);
-
-//     //if globalStoryState was changed, reset the story
-//     if (setStoryState) {
-//         advanceStory();
-//     }
-// }
-
-//fires when one of the User Interface buttons is clicked
-//pass the button number that was clicked to the story
-//and reset the UI
-//function toPause() {
-//    isPaused = ! isPaused
-//}
-
+// Capture button input
 let captureButton = (buttonNumber) =>
 {
     resetUI();
     advanceStory(buttonNumber); 
 }
 
+// Disable choice buttons and name input
 let resetUI = ()  =>
 {
-    button1.style.display = "none";
-    button2.style.display = "none";
-    button3.style.display = "none";
-    button4.style.display = "none";
-    nameInput.style.display = "none";
+    choiceButtons.forEach((button, index) => 
+    { 
+        if (!button.classList.contains ("fadedOut"))
+            fadeOut (button); 
+    });
+
+    if (!inputField.classList.contains ("fadedOut"))
+        fadeOut (inputField); 
 }
 
-let gameLose = (scenario) =>
+// Start countdown from timeLeft
+const startTimer = () =>
+{
+    countdown = setInterval(() => 
+    {
+        timeLeft -= 1;
+        timerText.innerHTML = timeLeft;
+        
+        if (timeLeft <= 0) 
+            gameOver(1); 
+    }, 1000);
+}
+
+// Pause timer and set timeLeft
+let setTimer = (time) =>
+{
+    clearInterval (countdown); 
+    timeLeft = time; 
+    timerText.innerHTML = timeLeft; 
+}
+
+// Game over with different scenarios
+let gameOver = (scenario) =>
 {
     resetUI();
 
-    // timerText.style.display = "none";
+    setTimer (timeLeft); 
 
-    switch (scenario) 
+    setImage("Raqqa")
+
+    switch (scenario)
     {
         case 1:
-            drawImage("Raqqa");
-            drawText("You're indesiciveness caused you and you're family to starve")
+            setText("You're indesiciveness caused you and your family to starve"); 
+            break; 
         case 2: 
-            drawImage("Raqqa")
-            drawText("The smuggler stole your money, are left stranded")
+            setText("The smuggler stole your money, are left stranded"); 
+            break; 
         case 3: 
-            drawImage("Raqqa")
-            drawText("You decide to escape by land through a jungle, you took a wrong turn, got lost and starved")
+            setText("You decide to escape by land through a jungle, you took a wrong turn, got lost and starved"); 
+            break; 
+        default: 
+            console.log ("Unexpected game over scenario"); 
+            break; 
     }
 }
 
-let urldecode = (str) => { return decodeURIComponent((str + '').replace(/\+/g, '%20')); }
-
-const save = () => {
-    if (storyState == "Intro") return
+// Save game state with cookies
+const save = () => 
+{
+    if (storyStage == "Intro") return; 
 
     let payload = JSON.stringify
     ({
-        name: playerName,
-        profession: playerProfession,
-        storyState: storyState
+        nameData: playerName,
+        professionData: profession,
+        storyStateData: (storyStage % 2 == 0) ? storyStage : storyStage - 1, 
+        timeLeftData: timeLeft
     })
 
-    /*
-        axios.post('/api/save', {
-            save: payload
-        })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+    document.cookie = `data=${payload}`;  
+}
+
+// Load game state from cookies
+const load = () => 
+{
+    if (!document.cookie) return; 
+
+    let gameInfo = JSON.parse(document.cookie.replace("data=", "")); 
+
+    profession = gameInfo.professionData; 
+    playerName = gameInfo.nameData;
+    storyStage = gameInfo.storyStateData;
     
-        console.log(payload)
-    */
+    setTimer (gameInfo.timeLeftData); 
 
-
-    return document.cookie = `save=${JSON.stringify(payload)}`
+    if (storyStage > 1)
+        startTimer ();
 }
 
-const load = () => {
-    if (!document.cookie) return;
+// Reset game state and cookies
+const restart = () =>
+{
+    // Reset cookies
+    document.cookie.split(";").forEach(cookie => 
+    {
+        let name = cookie.indexOf("=") > -1 ? cookie.substr(0, cookie.indexOf("=")) : cookie; 
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT"; 
+    });
 
-    let data = document.cookie.replace("save=", "");
-    let gameInfo = JSON.parse(JSON.parse(data));
-
-    console.log(gameInfo);
-
-    playerProfession = gameInfo.profession;
-    playerName = gameInfo.name;
-    storyState = gameInfo.storyState;
-
-    resetUI();
-    console.log(storyState);
-    advanceStory();
+    newGame ()
 }
 
+// Fades in given HTML element
+const fadeIn = (element) =>
+{
+    element.classList.add ("fadeIn"); 
+    element.classList.remove ("fadedOut"); 
 
+    setTimeout(() => 
+    {
+        element.classList.add ("fadedIn"); 
+        element.classList.remove ("fadeIn"); 
+    }, FADETIME);
+}
 
-button1.addEventListener("click", () => { captureButton (1); });
-button2.addEventListener("click", () => { captureButton (2); });
-button3.addEventListener("click", () => { captureButton (3); });
-button4.addEventListener("click", () => { captureButton (4); });
+// Fades out given HTML element
+const fadeOut = (element) =>
+{
+    element.classList.add ("fadeOut"); 
+    element.classList.remove ("fadedIn"); 
+
+    setTimeout(() => 
+    {
+        element.classList.add ("fadedOut"); 
+        element.classList.remove ("fadeOut"); 
+    }, FADETIME); 
+}
+
+// Add event listeners to buttons
+choiceButtons [0].addEventListener("click", () => { captureButton (1); });
+choiceButtons [1].addEventListener("click", () => { captureButton (2); });
+choiceButtons [2].addEventListener("click", () => { captureButton (3); });
+choiceButtons [3].addEventListener("click", () => { captureButton (4); });
 
 saveButton.addEventListener("click", () => { save (); });
+restartButton.addEventListener("click", () => { restart (); });
 
 newGame(); 
-load(); 

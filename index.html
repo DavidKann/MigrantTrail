@@ -3,31 +3,22 @@
         <title>Migrant Trail</title>
         <link rel="stylesheet" type="text/css" href="stylesheet.css">
     </head>
-<body>
-    <h1 id="title">Migrant Trail</h1>
+    <body>
+        <h1 id="title">Migrant Trail</h1>
+        <h2 id="timer">30</h2>
+        
+        <canvas id="canvas" width="800" height="500" style="border:1px solid #d3d3d3;"></canvas>
+        
+        <form><input id="nameInput" class="fadedOut" type="text"></form>
 
-    <h2 id="timer">30</h2>
-    
-    <canvas id="canvas" width="800" height="500" style="border:1px solid #d3d3d3;"></canvas>
+        <input class="choiceButtons fadedOut" type="button"></input>
+        <input class="choiceButtons fadedOut" type="button"></input>
+        <input class="choiceButtons fadedOut" type="button"></input>
+        <input class="choiceButtons fadedOut" type="button"></input>
 
-    <br><br>
-    <form><input id="nameInput" type="text"></form>
+        <button id="save">Save</button>
+        <button id="restart">Restart</button>
 
-    <input id="button1" class="choiceButtons" type="button" value="Choice 1"/>
-    <input id="button2" class="choiceButtons" type="button" value="Choice 2"/>
-    <input id="button3" class="choiceButtons" type="button" value="Choice 3"/>
-    <input id="button4" class="choiceButtons" type="button" value="Choice 4"/>
-<!--     
-    <br>
-    <textarea id="debugTextInput" rows="4" cols="98"></textarea>
-    <br>
-    <input id="debugSendCommand" class="myButton" type="button" value="Send Command" onclick="debugSendCommand();" />
-    <textarea id="debugTextOutput" rows="4" cols="98"></textarea>
-    
-    <br> -->
-    <button id="save">Save</button>
-
-    <script src="MigrantTrail.js" type="text/javascript"></script>
-</body>
-
+        <script src="MigrantTrail.js" type="text/javascript"></script>
+    </body>
 </html>
