@@ -114,3 +114,29 @@ button:hover, input:hover
     pointer-events: none;
 	display: none;
 }
+
+
+#socialMediaButtons button
+{
+	position: absolute;
+	margin-left: 22px;
+	bottom: 0;
+	left: 0;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-size: cover;
+	position: fixed;
+}
+
+#twitter
+{
+	background: url(/img/twitter.png);
+	margin-bottom: 20px;
+}
+
+#facebook
+{
+	background: url(/img/facebook.png);
+	margin-bottom: 70px;
+}

@@ -22,6 +22,9 @@ let storyState =
 
 const FADETIME = 400; // Choice button fade length in milliseconds
 
+const GAMELINK = "https://github.com/DavidKann/MigrantTrail"; 
+let endText = ""; 
+
 // STORY STRUCTURE
 // Each story stage, input field and all buttons disabled
 // Call setImage (), setText (), setInputField (), or setButton () to enable required elements for stage
@@ -93,10 +96,27 @@ const advanceStory = (buttonIndex) =>
             break; 
         case 6: 
             console.log ("DISPLAY Success"); 
-            if (storyState.profession == "MedStudent") setText("You made it to Turkery where you got a job as a doctor");
-            else if (storyState.profession == "HotelClerk") setText("You made it to Turkery where you got a job as a Hotel Clerk");
-            else if (storyState.profession == "Mechanic") setText("You made it to Turkery where you got a job as a Mechanic");
-            else setText("You made it to Turkey where you someone you knew helped you get in illegally"); 
+            
+            if (storyState.profession == "MedStudent") 
+            {
+                setText ("You made it to Turkery where you got a job as a doctor")
+                endText = "I made it to Turkey where I got a job as a doctor"; 
+            }
+            else if (storyState.profession == "HotelClerk") 
+            {
+                setText ("You made it to Turkery where you got a job as a Hotel Clerk")
+                endText = "I made it to Turkey where I got a job as a Hotel Clerk"; 
+            }
+            else if (storyState.profession == "Mechanic") 
+            {
+                setText ("You made it to Turkery where you got a job as a Mechanic")
+                endText = "I made it to Turkey where I got a job as a Mechanic"; 
+            }
+            else 
+            {
+                setText ("You made it to Turkey where someone you knew helped you get in illegally")
+                endText = "I made it to Turkey where someone I knew helped me get in illegally"; 
+            }
             setTimer (timeLeft); // Stop timer
             break; 
         default:
@@ -288,12 +308,15 @@ let gameOver = (scenario) =>
     {
         case 1:
             setText("You're indesiciveness caused you and your family to starve"); 
+            endText = "My indeciciveness caused me and my family to starve"; 
             break; 
         case 2: 
             setText("The smuggler stole your money, are left stranded"); 
+            endText = "A smuggler stole my money and left me stranded"; 
             break; 
         case 3: 
             setText("You decide to escape by land through a jungle, you took a wrong turn, got lost and starved"); 
+            endText = "I decided to escape by land through a jungle, took a wrong turn, got lost, and starved"; 
             break; 
         default: 
             console.log ("Unexpected game over scenario"); 
@@ -355,6 +378,18 @@ const restart = () =>
     newGame ()
 }
 
+const openTwitter = () =>
+{
+    let message = ""; 
+
+    if (endText == "")
+        message = `Play Migrant Trail, an adventure game and informative experience at ${GAMELINK}!`; 
+    else
+        message = `I played Migrant Trail and ${endText}. You can play it too at ${GAMELINK}!`; 
+
+    window.open (`https://twitter.com/intent/tweet?text=${message}`); 
+}
+
 // Fades in given HTML element
 const fadeIn = (element) =>
 {
@@ -388,5 +423,8 @@ choiceButtons [2].addEventListener("click", () => { captureButton (3); });
 choiceButtons [3].addEventListener("click", () => { captureButton (4); });
 
 restartButton.addEventListener("click", () => { restart (); });
+
+document.querySelector ("#twitter").addEventListener ("click", openTwitter)
+document.querySelector ("#facebook").addEventListener ("click", () => { window.open ("https://facebook.com") })
 
 newGame(); 
