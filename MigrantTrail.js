@@ -1,38 +1,42 @@
-// Global UI variables
+// UI variables
 const canvas = document.querySelector ("#canvas"); 
 
 const timerText = document.querySelector ("#timer"); 
 const choiceButtons = document.querySelectorAll (".choiceButtons"); 
 const inputField = document.querySelector ("#nameInput"); 
 
-const saveButton = document.querySelector ("#save")
 const restartButton = document.querySelector ("#restart"); 
 
-// Global game variables
+// Timer variables
 let timeLeft = 0; 
 let countdown = 0; // Holds setInterval state
 
-const FADETIME = 400; // Choice button fade length in milliseconds
-
 let playerName = ""; 
-let profession = ""; 
-let storyStage = 0; 
+let storyStage = 0; // Stage in story
+
+// Game state variables saved in save ()
+let storyState = 
+{ 
+    profession: ""
+}
+
+const FADETIME = 400; // Choice button fade length in milliseconds
 
 // STORY STRUCTURE
 // Each story stage, input field and all buttons disabled
-// Call setImage, setText, setInputField, or setButton to enable required elements for stage
-// Odd storyState used for displaying data. End odd storyStages with storyStage++ and advanceStory ()
-// Even storyState used for getting input. End even storyStages with storyStage++ and advanceStory ()
+// Call setImage (), setText (), setInputField (), or setButton () to enable required elements for stage
+// Call nextStoryStage () to end current stage
 const advanceStory = (buttonIndex) => 
 {
-    switch (storyStage) {
+    switch (storyStage) 
+    {
         case 0:
             console.log ("DISPLAY Enter Name")
             setImage ("homescreen"); 
             setText ("Your life is about to change forever. But first, who are you? Enter your name to start your Journey! In Migrant Trail, take on the role and face the hardship of a migrant fleeing conflict in Syria."); 
             setInputField (); 
             setButton (1, "Enter your name"); 
-            storyStage++; 
+            nextStoryStage (); 
             break;
         case 1:
             console.log ("INPUT Enter Name")
@@ -42,8 +46,7 @@ const advanceStory = (buttonIndex) =>
                 
                 startTimer(); 
                 
-                storyStage ++; 
-                advanceStory (); 
+                nextStoryStage (); 
             }
             else
             {
@@ -61,17 +64,16 @@ const advanceStory = (buttonIndex) =>
             setButton(2, "I could only ever find odd-jobs even before things fell apart. Maybe there will be new opportunities ahead");
             setButton(3, "The hotel I used to work in is gone now, but I will miss the friends I made there");
             setButton(4, "Even though buisness has been good at the auto shop, if I need to leave then I need to leave");
-            storyStage++; 
+            nextStoryStage (); 
             break; 
 
         case 3: 
             console.log ("INPUT professions"); 
-            if (buttonIndex == 1) profession = "MedStudent"; 
-            if (buttonIndex == 2) profession = "OddJobs"; 
-            if (buttonIndex == 3) profession = "HotelClerk"; 
-            if (buttonIndex == 4) profession = "Mechanic"; 
-            storyStage ++; 
-            advanceStory (); 
+            if (buttonIndex == 1) storyState.profession = "MedStudent"; 
+            if (buttonIndex == 2) storyState.profession = "OddJobs"; 
+            if (buttonIndex == 3) storyState.profession = "HotelClerk"; 
+            if (buttonIndex == 4) storyState.profession = "Mechanic"; 
+            nextStoryStage (); 
             break; 
         case 4: 
             console.log ("DISPLAY Escape Options"); 
@@ -79,7 +81,7 @@ const advanceStory = (buttonIndex) =>
             setText("You need to find a way out!"); 
             setButton(1, "You decide to pay a smuggler to help you escape by sea"); 
             setButton(2, "You decide to escape by land"); 
-            storyStage++; 
+            nextStoryStage (); 
             break; 
         case 5: 
             console.log ("INPUT Escape Options"); 
@@ -87,23 +89,31 @@ const advanceStory = (buttonIndex) =>
             if (Math.floor (Math.random () * 2) == 0)
                 gameOver (buttonIndex == 1 ? 2 : 3); 
             else
-            {
-                storyStage ++; 
-                advanceStory (); 
-            }
+                nextStoryStage (); 
             break; 
         case 6: 
             console.log ("DISPLAY Success"); 
-            if (profession == "MedStudent") setText("You made it to Turkery where you got a job as a doctor");
-            else if (profession == "HotelClerk") setText("You made it to Turkery where you got a job as a Hotel Clerk");
-            else if (profession == "Mechanic") setText("You made it to Turkery where you got a job as a Mechanic");
+            if (storyState.profession == "MedStudent") setText("You made it to Turkery where you got a job as a doctor");
+            else if (storyState.profession == "HotelClerk") setText("You made it to Turkery where you got a job as a Hotel Clerk");
+            else if (storyState.profession == "Mechanic") setText("You made it to Turkery where you got a job as a Mechanic");
             else setText("You made it to Turkey where you someone you knew helped you get in illegally"); 
             setTimer (timeLeft); // Stop timer
             break; 
         default:
-            console.log("Story state " + storyStage + " not found"); 
+            console.log("Story stage " + storyStage + " not found"); 
             break; 
     }
+}
+
+// End a story stage in advanceStory ()
+// Even storyStage used for displaying data. End even storyStages with storyStage++
+// Odd storyStage used for getting input. End even storyStages with storyStage++ and advanceStory ()
+const nextStoryStage = () =>
+{
+    storyStage++; 
+
+    if (storyStage % 2 == 0) // If next story state is even
+        advanceStory (); 
 }
 
 // Reset UI and story
@@ -126,8 +136,8 @@ const newGame = ()  =>
 
     inputField.value = ""; 
     
-    load()
-    advanceStory(); 
+    load (); 
+    advanceStory (); 
 }
 
 // Draw image in upper two thirds of canvas
@@ -228,6 +238,7 @@ let captureButton = (buttonNumber) =>
 {
     resetUI();
     advanceStory(buttonNumber); 
+    save (); 
 }
 
 // Disable choice buttons and name input
@@ -291,19 +302,22 @@ let gameOver = (scenario) =>
 }
 
 // Save game state with cookies
+// Saves variables in gameState array
 const save = () => 
 {
     if (storyStage == "Intro") return; 
 
-    let payload = JSON.stringify
-    ({
-        nameData: playerName,
-        professionData: profession,
-        storyStateData: (storyStage % 2 == 0) ? storyStage : storyStage - 1, 
+    let saveData = 
+    {
+        nameData: playerName, 
+        storyStageData: (storyStage % 2 == 0) ? storyStage : storyStage - 1, 
         timeLeftData: timeLeft
-    })
+    }; 
 
-    document.cookie = `data=${payload}`;  
+    for (const state in storyState) 
+        saveData [state] = storyState [state]; 
+
+    document.cookie = `saveData=${JSON.stringify(saveData)}`;  
 }
 
 // Load game state from cookies
@@ -311,13 +325,18 @@ const load = () =>
 {
     if (!document.cookie) return; 
 
-    let gameInfo = JSON.parse(document.cookie.replace("data=", "")); 
-
-    profession = gameInfo.professionData; 
-    playerName = gameInfo.nameData;
-    storyStage = gameInfo.storyStateData;
+    let saveData = JSON.parse(document.cookie.replace("saveData=", "")); 
     
-    setTimer (gameInfo.timeLeftData); 
+    for (const data in saveData) 
+    {
+        if (data != "nameData" && data != "storyStageData" && data != "timeLeftData")
+        storyState [data] = saveData [data]; 
+    }
+    
+    playerName = saveData.nameData; 
+    storyStage = saveData.storyStageData; 
+    
+    setTimer (saveData.timeLeftData); 
 
     if (storyStage > 1)
         startTimer ();
@@ -368,7 +387,6 @@ choiceButtons [1].addEventListener("click", () => { captureButton (2); });
 choiceButtons [2].addEventListener("click", () => { captureButton (3); });
 choiceButtons [3].addEventListener("click", () => { captureButton (4); });
 
-saveButton.addEventListener("click", () => { save (); });
 restartButton.addEventListener("click", () => { restart (); });
 
 newGame(); 

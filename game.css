@@ -58,27 +58,17 @@ input, button
 
 button:hover, input:hover
 {
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
-
-#save, #restart
-{
-	width: 160px;
-	margin-top: 40px;
-	position: absolute;
-	top: 0;
-}
-
-#save
-{
-	margin-left: 40px;
-	left: 0;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
 }
 
 #restart
 {
+	position: absolute;
+	margin-top: 40px;
 	margin-right: 40px;
+	top: 0;
 	right: 0;
+	width: 160px;
 }
 
 
