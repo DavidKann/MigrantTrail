@@ -1,15 +1,12 @@
 body
 {
     font-family: 'Roboto', sans-serif; 
+    scroll-snap-type: y mandatory;
 }
 
 h1
 {
     margin: 0;
-    position: absolute; 
-    top: 25%; 
-    left: 50%; 
-    transform: translateX(-50%); 
     font-size: 100px;
 	color: #0e9aa7; 
 }
@@ -17,21 +14,14 @@ h1
 h2
 {
     margin: 0;
-    position: absolute; 
-    top: 45%; 
-    left: 50%; 
-    transform: translateX(-50%); 
     font-size: 30px;
 	color: #0e9aa7; 
+    margin-bottom: 10px;
 }
 
 input
 {
     margin: 0;
-    position: absolute; 
-    top: 60%; 
-    left: 50%; 
-    transform: translateX(-50%); 
 }
 
 input
@@ -51,4 +41,18 @@ input
 input:hover
 {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+
+section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    scroll-snap-align: start;
+}
+
+div {
+    text-align: center;
 }
