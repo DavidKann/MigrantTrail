@@ -425,6 +425,8 @@ choiceButtons [3].addEventListener("click", () => { captureButton (4); });
 restartButton.addEventListener("click", () => { restart (); });
 
 document.querySelector ("#twitter").addEventListener ("click", openTwitter)
-document.querySelector ("#facebook").addEventListener ("click", () => { window.open ("https://facebook.com") })
+document.querySelector ("#facebook").addEventListener ("click", () => { window.open ("https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgithub.com%2FDavidKann%2FMigrantTrail&amp;src=sdkpreparse") })
+
+document.querySelector ("#playButton").addEventListener ("click", () => { window.open ("#game", "_self") })
 
 newGame(); 

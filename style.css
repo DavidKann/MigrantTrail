@@ -1,15 +1,96 @@
 body
 {
 	font-family: 'Roboto', sans-serif; 
-	margin: 35px; 
+	margin-left: 35px; 
+	margin-right: 35px; 
+	margin-bottom: 35px; 
 	text-align: center;
-	background: white; 
+}
+
+#home, #game
+{
+	height: 100vh; 
+}
+
+
+
+
+#nav-bar
+{
+	position: sticky;
+	top: 0;
+	z-index: 20; 
+}
+
+.navbar-nav li
+{
+	padding: 0 15px;
+}
+
+.nav-item
+{
+	float: right!important;
+	text-align: right!important; 
+	
+	/* font-size: 943px!important; */
+}
+
+#nav-bar ul li a:hover
+{
+	color: black!important; 
+}
+
+.navbar
+{
+	background: white;
+}
+
+.navbar-toggler
+{
+	border: none!important;
+}
+
+.nav-link
+{
+	font-weight: 600; 
+	font-size: 16px; 
+	color: #555555!important; 
+}
+
+
+
+
+h1
+{
+	font-size: 80px;
+	color: #0e9aa7; 
 }
 
 #title
 {
-	font-size: 50px;
-	color: #0e9aa7; 
+	position: absolute;
+    top: 38%;
+    left: 50%; 
+	transform: translate(-50%, -50%);
+}
+
+#playButton
+{
+	width: 300px;
+	height: 70px;
+
+	position: absolute;
+    top: 60%;
+	transform: translate(-50%, -50%);
+
+	text-align: center; 
+	border-radius: 10px;
+	font-size: 30px;
+	background-color: #e9e9e9;
+	border: none;
+	margin: 2px;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+	transition: 0.3s;
 }
 
 #timer
@@ -34,7 +115,7 @@ canvas:hover
 	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.3);
 }
 
-input, button
+input
 {
 	height: 60px; 
 	width: 625px; 
@@ -63,15 +144,29 @@ button:hover, input:hover
 
 #restart
 {
+	height: 60px; 
+	width: 625px; 
+	text-align: center; 
+	border-radius: 10px;
+	font-size: 30px;
+	background-color: #e9e9e9;
+	border: none;
+	margin: 2px;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+	transition: 0.3s;
+	
 	position: absolute;
-	margin-top: 40px;
-	margin-right: 40px;
+	margin-top: 25px;
+	margin-right: 10px;
 	top: 0;
 	right: 0;
 	width: 160px;
 }
 
-
+#game
+{
+	position: relative;
+}
 
 .fadeIn
 {
@@ -139,4 +234,10 @@ button:hover, input:hover
 {
 	background: url(/img/facebook.png);
 	margin-bottom: 70px;
+}
+
+#about
+{
+	margin-left: 150px;
+	margin-right: 150px;
 }

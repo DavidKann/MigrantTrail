@@ -1,11 +1,74 @@
-<html>
+ <html>
     <head>
-        <title>Migrant Trail | Home</title>
-        <link rel="stylesheet" type="text/css" href="home.css">
+        <title>Migrant Trail</title>
+        
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+            
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        
+        <script src="scrollEffect.js"></script>
+        
+        <script>
+            let aScroll = new SmoothScroll ('a[href*="#"]')
+            let buttonScroll = new SmoothScroll ('button[href*="#"]')
+        </script>
+
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <h1>Migrant Trail</h1>
-        <h2>Adventure game and informative experience</h2>
-        <form action="/game.html"><input type="submit" value="Play"></form>
+        <section id="nav-bar">
+            <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="navbar-brand" href="#home">Migrant Trail</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="#top">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#game">Game</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                </ul>
+            </div>
+            </nav>
+        </section>
+        
+        <section id="home">
+            <h1 id="title">Migrant Trail</h1>
+            <button id="playButton" href="#game">PLAY</button>
+        </section>
+
+        <section id="game">
+            <br>
+
+            <h2 id="timer">30</h2>
+            
+            <canvas id="canvas" width="800" height="500" style="border:1px solid #d3d3d3;"></canvas>
+            
+            <form><input id="nameInput" class="fadedOut" type="text"></form>
+
+            <input class="choiceButtons fadedOut" type="button"></input>
+            <input class="choiceButtons fadedOut" type="button"></input>
+            <input class="choiceButtons fadedOut" type="button"></input>
+            <input class="choiceButtons fadedOut" type="button"></input>
+
+            <button id="restart">Restart</button>
+
+            <div id="socialMediaButtons">
+                <button id="twitter"></button>
+                <button id="facebook"></button> 
+            </div>
+        </section>
+
+        <section id="about">
+            <br>
+            <h1>About</h1>
+            <br>
+            <p id="#about">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vivamus at augue eget arcu. Sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper. Nunc congue nisi vitae suscipit tellus mauris a diam maecenas. Nunc scelerisque viverra mauris in aliquam sem fringilla. Suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Ut morbi tincidunt augue interdum velit euismod. Gravida dictum fusce ut placerat orci nulla pellentesque dignissim enim. Pellentesque elit ullamcorper dignissim cras tincidunt lobortis feugiat vivamus at. Diam sit amet nisl suscipit adipiscing bibendum est. Non blandit massa enim nec dui nunc. Eget arcu dictum varius duis at consectetur.</p>
+            <br>
+        </section>
+        
+        <script src="script.js" type="text/javascript"></script>
     </body>
 </html>
