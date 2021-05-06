@@ -8,6 +8,9 @@ const inputField = document.querySelector ("#nameInput");
 const restartButton = document.querySelector ("#restart"); 
 
 // Timer variables
+const useTimer = true; 
+let startTime = 30; 
+
 let timeLeft = 0; 
 let countdown = 0; // Holds setInterval state
 
@@ -47,7 +50,8 @@ const advanceStory = (buttonIndex) =>
             {
                 playerName = inputField.value;
                 
-                startTimer(); 
+                if (useTimer)
+                    startTimer(); 
                 
                 nextStoryStage (); 
             }
@@ -117,7 +121,10 @@ const advanceStory = (buttonIndex) =>
                 setText ("You made it to Turkey where someone you knew helped you get in illegally")
                 endText = "I made it to Turkey where someone I knew helped me get in illegally"; 
             }
-            setTimer (timeLeft); // Stop timer
+
+            if (useTimer)
+                setTimer (timeLeft); // Stop timer
+
             break; 
         default:
             console.log("Story stage " + storyStage + " not found"); 
@@ -139,7 +146,8 @@ const nextStoryStage = () =>
 // Reset UI and story
 const newGame = ()  =>
 {
-    setTimer (30); 
+    if (useTimer)
+        setTimer (startTime); 
 
     choiceButtons.forEach(button => // If restart button used, need to reset default classes
     {
@@ -300,7 +308,8 @@ let gameOver = (scenario) =>
 {
     resetUI();
 
-    setTimer (timeLeft); 
+    if (useTimer)
+        setTimer (timeLeft); 
 
     setImage("Raqqa")
 
@@ -359,9 +368,10 @@ const load = () =>
     playerName = saveData.nameData; 
     storyStage = saveData.storyStageData; 
     
-    setTimer (saveData.timeLeftData); 
+    if (useTimer)
+        setTimer (saveData.timeLeftData); 
 
-    if (storyStage > 1)
+    if (storyStage > 1 && useTimer)
         startTimer ();
 }
 
@@ -428,5 +438,8 @@ document.querySelector ("#twitter").addEventListener ("click", openTwitter)
 document.querySelector ("#facebook").addEventListener ("click", () => { window.open ("https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgithub.com%2FDavidKann%2FMigrantTrail&amp;src=sdkpreparse") })
 
 document.querySelector ("#playButton").addEventListener ("click", () => { window.open ("#game", "_self") })
+
+if (!useTimer)
+    timerText.style.visibility = "hidden"; 
 
 newGame(); 

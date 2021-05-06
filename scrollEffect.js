@@ -58,38 +58,35 @@
 		return false;
 	};
 
-	var getHeight = function (elem) {
+	const getHeight = (elem) => 
+	{
 		return parseInt(window.getComputedStyle(elem).height, 10);
 	};
 
-	var escapeCharacters = function (id) {
+	const escapeCharacters = (id) => {
 
 		if (id.charAt(0) === '#') {
 			id = id.substr(1);
 		}
 
-		var string = String(id);
-		var length = string.length;
-		var index = -1;
-		var codeUnit;
-		var result = '';
-		var firstCodeUnit = string.charCodeAt(0);
+		let string = String(id);
+		let length = string.length;
+		let index = -1;
+		let codeUnit;
+		let result = '';
+		let firstCodeUnit = string.charCodeAt(0);
+
 		while (++index < length) {
 			codeUnit = string.charCodeAt(index);
-			if (codeUnit === 0x0000) {
-				throw new InvalidCharacterError(
-					'Invalid character: the input contains U+0000.'
-				);
-			}
+			if (codeUnit === 0x0000)
+				throw new InvalidCharacterError('Invalid character: the input contains U+0000.');
 
 			if ((codeUnit >= 0x0001 && codeUnit <= 0x001F) || codeUnit == 0x007F || (index === 0 && codeUnit >= 0x0030 && codeUnit <= 0x0039) || (index === 1 && codeUnit >= 0x0030 && codeUnit <= 0x0039 && firstCodeUnit === 0x002D)) 
 			{
 				result += '\\' + codeUnit.toString(16) + ' ';
 				continue;
 			}
-
-			if (
-				codeUnit >= 0x0080 || codeUnit === 0x002D || codeUnit === 0x005F || codeUnit >= 0x0030 && codeUnit <= 0x0039 || codeUnit >= 0x0041 && codeUnit <= 0x005A || codeUnit >= 0x0061 && codeUnit <= 0x007A) 
+			if (codeUnit >= 0x0080 || codeUnit === 0x002D || codeUnit === 0x005F || codeUnit >= 0x0030 && codeUnit <= 0x0039 || codeUnit >= 0x0041 && codeUnit <= 0x005A || codeUnit >= 0x0061 && codeUnit <= 0x007A) 
 			{
 				result += string.charAt(index);
 				continue;
@@ -100,11 +97,11 @@
 		}
 
 		return '#' + result;
-
 	};
 
-	var easingPattern = function (settings, time) {
-		var pattern;
+	const easingPattern = (settings, time) =>
+	{
+		let pattern;
 
 		if (settings.easing === 'easeInQuad') pattern = time * time; 
 		if (settings.easing === 'easeOutQuad') pattern = time * (2 - time); 
@@ -124,16 +121,20 @@
 		return pattern || time; 
 	};
 
-	var getDocumentHeight = function () {
-		return Math.max(
+	const getDocumentHeight = () => 
+	{
+		return Math.max
+		(
 			document.body.scrollHeight, document.documentElement.scrollHeight,
 			document.body.offsetHeight, document.documentElement.offsetHeight,
 			document.body.clientHeight, document.documentElement.clientHeight
 		);
 	};
 
-	var getEndLocation = function (anchor, headerHeight, offset, clip) {
-		var location = 0;
+	const getEndLocation = (anchor, headerHeight, offset, clip) =>
+	{
+		let location = 0;
+
 		if (anchor.offsetParent) {
 			do {
 				location += anchor.offsetTop;
@@ -147,25 +148,27 @@
  		return location;
 	};
 
-	var getHeaderHeight = function (header) {
+	const getHeaderHeight = (header) => 
+	{
 		return !header ? 0 : (getHeight(header) + header.offsetTop);
 	};
 
-	var getSpeed = function (distance, settings) {
-		var speed = settings.speedAsDuration ? settings.speed : Math.abs(distance / 1000 * settings.speed);
+	const getSpeed = (distance, settings) => {
+		let speed = settings.speedAsDuration ? settings.speed : Math.abs(distance / 1000 * settings.speed);
 		if (settings.durationMax && speed > settings.durationMax) return settings.durationMax;
 		if (settings.durationMin && speed < settings.durationMin) return settings.durationMin;
 		return parseInt(speed, 10);
 	};
 
-	var setHistory = function (options) 
+	const setHistory = (options) =>
 	{
 		if (!history.replaceState || !options.updateURL || history.state) return;
 
-		var hash = window.location.hash;
+		let hash = window.location.hash;
 		hash = hash ? hash : '';
 
-		history.replaceState(
+		history.replaceState
+		(
 			{
 				smoothScroll: JSON.stringify(options),
 				anchor: hash ? hash : window.pageYOffset
@@ -173,15 +176,15 @@
 			document.title,
 			hash ? hash : window.location.href
 		);
-
 	};
 
-	var updateURL = function (anchor, isNum, options) {
+	const updateURL = (anchor, isNum, options) => {
 		if (isNum) return;
 
 		if (!history.pushState || !options.updateURL) return;
 
-		history.pushState(
+		history.pushState
+		(
 			{
 				smoothScroll: JSON.stringify(options),
 				anchor: anchor.id
@@ -192,7 +195,7 @@
 
 	};
 
-	var adjustFocus = function (anchor, endLocation, isNum)
+	const adjustFocus = (anchor, endLocation, isNum) =>
 	{
 		if (anchor === 0) {
 			document.body.focus();
@@ -201,18 +204,21 @@
 		if (isNum) return;
 
 		anchor.focus();
-		if (document.activeElement !== anchor) {
+		
+		if (document.activeElement !== anchor) 
+		{
 			anchor.setAttribute('tabindex', '-1');
 			anchor.focus();
 			anchor.style.outline = 'none';
 		}
-		window.scrollTo(0 , endLocation);
 
+		window.scrollTo(0 , endLocation);
 	};
 
-	var emitEvent = function (type, options, anchor, toggle) {
+	let emitEvent = (type, options, anchor, toggle) =>
+	{
 		if (!options.emitEvents || typeof window.CustomEvent !== 'function') return;
-		var event = new CustomEvent(type, {
+		let event = new CustomEvent(type, {
 			bubbles: true,
 			detail: {
 				anchor: anchor,
@@ -222,43 +228,47 @@
 		document.dispatchEvent(event);
 	};
 
-	var SmoothScroll = function (selector, options) 
+	const SmoothScroll = function (selector, options) 
 	{
-		var smoothScroll = {}; 
-		var settings, anchor, toggle, fixedHeader, eventTimeout, animationInterval;
+		let smoothScroll = {}; 
+		let settings, toggle, fixedHeader, animationInterval;
 
-		smoothScroll.cancelScroll = function (noEvent) {
+		smoothScroll.cancelScroll = (noEvent) =>
+		{
 			cancelAnimationFrame(animationInterval);
 			animationInterval = null;
-			if (noEvent) return;
+
+			if (noEvent) 
+				return;
+
 			emitEvent('scrollCancel', settings);
 		};
 
-		smoothScroll.animateScroll = function (anchor, toggle, options) 
+		smoothScroll.animateScroll = (anchor, toggle, options) =>
 		{
 			smoothScroll.cancelScroll();
 
-			var _settings = extend(settings || defaults, options || {}); 
+			let _settings = extend(settings || defaults, options || {}); 
 
-			var isNum = Object.prototype.toString.call(anchor) === '[object Number]' ? true : false;
-			var anchorElem = isNum || !anchor.tagName ? null : anchor;
+			let isNum = Object.prototype.toString.call(anchor) === '[object Number]' ? true : false;
+			let anchorElem = isNum || !anchor.tagName ? null : anchor;
 			if (!isNum && !anchorElem) return;
-			var startLocation = window.pageYOffset; 
+			let startLocation = window.pageYOffset; 
 			if (_settings.header && !fixedHeader) 
 			{
 				fixedHeader = document.querySelector(_settings.header);
 			}
-			var headerHeight = getHeaderHeight(fixedHeader);
-			var endLocation = isNum ? anchor : getEndLocation(anchorElem, headerHeight, parseInt((typeof _settings.offset === 'function' ? _settings.offset(anchor, toggle) : _settings.offset), 10), _settings.clip); // Location to scroll to
-			var distance = endLocation - startLocation; 
-			var documentHeight = getDocumentHeight();
-			var timeLapsed = 0;
-			var speed = getSpeed(distance, _settings);
-			var start, percentage, position;
+			let headerHeight = getHeaderHeight(fixedHeader);
+			let endLocation = isNum ? anchor : getEndLocation(anchorElem, headerHeight, parseInt((typeof _settings.offset === 'function' ? _settings.offset(anchor, toggle) : _settings.offset), 10), _settings.clip); // Location to scroll to
+			let distance = endLocation - startLocation; 
+			let documentHeight = getDocumentHeight();
+			let timeLapsed = 0;
+			let speed = getSpeed(distance, _settings);
+			let start, percentage, position;
 
-			var stopAnimateScroll = function (position, endLocation) 
+			let stopAnimateScroll = (position, endLocation) =>
 			{
-				var currentLocation = window.pageYOffset;
+				let currentLocation = window.pageYOffset;
 
 				if (position == endLocation || currentLocation == endLocation || ((startLocation < endLocation && window.innerHeight + currentLocation) >= documentHeight)) 
 				{
@@ -272,30 +282,36 @@
 					animationInterval = null;
 
 					return true;
-
 				}
 			};
 
-			var loopAnimateScroll = function (timestamp) {
-				if (!start) { start = timestamp; }
+			const loopAnimateScroll = (timestamp) => 
+			{
+				if (!start) 
+					start = timestamp; 
+
 				timeLapsed += timestamp - start;
 				percentage = speed === 0 ? 0 : (timeLapsed / speed);
 				percentage = (percentage > 1) ? 1 : percentage;
 				position = startLocation + (distance * easingPattern(_settings, percentage));
 				window.scrollTo(0, Math.floor(position));
-				if (!stopAnimateScroll(position, endLocation)) {
+
+				if (!stopAnimateScroll(position, endLocation)) 
+				{
 					animationInterval = window.requestAnimationFrame(loopAnimateScroll);
 					start = timestamp;
 				}
 			};
 
-			if (window.pageYOffset === 0) {
+			if (window.pageYOffset === 0) 
+			{
 				window.scrollTo(0, 0);
 			}
 
 			updateURL(anchor, isNum, _settings);
 
-			if (reduceMotion()) {
+			if (reduceMotion()) 
+			{
 				window.scrollTo(0, Math.floor(endLocation));
 				return;
 			}
@@ -307,7 +323,7 @@
 
 		};
 
-		var clickHandler = function (event) 
+		const clickHandler = (event) =>
 		{
 			if (event.defaultPrevented) return;
 
@@ -320,14 +336,14 @@
 
 			if (toggle.hostname !== window.location.hostname || toggle.pathname !== window.location.pathname || !/#/.test(toggle.href)) return;
 
-			var hash;
+			let hash;
 			try {
 				hash = escapeCharacters(decodeURIComponent(toggle.hash));
 			} catch(e) {
 				hash = escapeCharacters(toggle.hash);
 			}
 
-			var anchor;
+			let anchor;
 			if (hash === '#') {
 				if (!settings.topOnEmptyHash) return;
 				anchor = document.documentElement;
@@ -340,27 +356,26 @@
 			event.preventDefault();
 			setHistory(settings);
 			smoothScroll.animateScroll(anchor, toggle);
-
 		};
 
-		var popstateHandler = function (event) 
+		const popstateHandler = () =>
 		{
 			if (history.state === null) return;
 
 			if (!history.state.smoothScroll || history.state.smoothScroll !== JSON.stringify(settings)) return;
 
-			var anchor = history.state.anchor;
+			let anchor = history.state.anchor;
+
 			if (typeof anchor === 'string' && anchor) {
 				anchor = document.querySelector(escapeCharacters(history.state.anchor));
 				if (!anchor) return;
 			}
 
 			smoothScroll.animateScroll(anchor, null, {updateURL: false});
-
 		};
 
-		smoothScroll.destroy = function () {
-
+		smoothScroll.destroy = () =>
+		{
 			if (!settings) return;
 
 			document.removeEventListener('click', clickHandler, false);
@@ -377,7 +392,7 @@
 
 		};
 
-		var init = function () 
+		const init = ()  =>
 		{
 			if (!supports()) throw 'Smooth Scroll: This browser does not support the required JavaScript methods and browser APIs.';
 
@@ -388,9 +403,8 @@
 
 			document.addEventListener('click', clickHandler, false);
 
-			if (settings.updateURL && settings.popstate) {
+			if (settings.updateURL && settings.popstate) 
 				window.addEventListener('popstate', popstateHandler, false);
-			}
 		};
 
 		init();
